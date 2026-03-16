@@ -17,7 +17,7 @@ public class TicketType {
     private Long id;
 
     @Column(nullable = false, length = 50)
-    private String name; // "Adult", "Student", "Senior"
+    private String name; // "Adult", "Student", "Senior" //in future refactor to enum
 
     @Column(name = "discount_percentage", nullable = false)
     private Integer discountPercentage; // 0, 20, 50
