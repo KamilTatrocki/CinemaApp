@@ -1,15 +1,13 @@
 import { HomeData } from '../models/HomeData';
 
-const MOCK_HOME_DATA: HomeData = {
-  title: 'Welcome to CinemaApp!',
-  subtitle: 'Explore the latest movies and manage your account.',
-  featuredMoviesCount: 3,
-};
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081';
 
 export const fetchHomeData = async (): Promise<HomeData> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_HOME_DATA);
-    }, 1000);
-  });
+  const response = await fetch(`${API_URL}/home`);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch home data');
+  }
+
+  return response.json();
 };

@@ -1,16 +1,32 @@
 import { User } from '../models/User';
+import { Ticket } from '../models/Ticket';
 
-const MOCK_USER: User = {
-  id: '1',
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  avatarUrl: 'https://i.pravatar.cc/150?u=1',
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081';
+
+export const fetchUserProfile = async (token: string): Promise<User> => {
+  const response = await fetch(`${API_URL}/users/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user profile');
+  }
+
+  return response.json();
 };
 
-export const fetchUserProfile = async (): Promise<User> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(MOCK_USER);
-    }, 1000);
+export const fetchUserTickets = async (token: string): Promise<Ticket[]> => {
+  const response = await fetch(`${API_URL}/users/me/tickets`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
   });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user tickets');
+  }
+
+  return response.json();
 };

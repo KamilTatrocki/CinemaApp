@@ -1,95 +1,193 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Avatar, Text, Card, Title, Paragraph, Button, ActivityIndicator } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text, ActivityIndicator, Button, Avatar } from 'react-native-paper';
 import { useUserViewModel } from '../../viewmodels/useUserViewModel';
+import { useAuthViewModel } from '../../viewmodels/useAuthViewModel';
+import { Ticket } from '../../models/Ticket';
+import LoginView from '../components/Auth/LoginView';
+import RegisterView from '../components/Auth/RegisterView';
 
 const AccountScreen = () => {
-  const { user, isLoading, isError, error } = useUserViewModel();
+  const { tickets, isLoading: isTicketsLoading } = useUserViewModel();
+  const { 
+    isAuthenticated, 
+    user, 
+    handleLogin, 
+    handleRegister, 
+    logout, 
+    isLoading: isAuthLoading, 
+    error: authError 
+  } = useAuthViewModel();
 
-  if (isLoading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator animating={true} size="large" />
-      </View>
-    );
-  }
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
-  if (isError) {
-    return (
-      <View style={styles.center}>
-        <Text variant="headlineSmall" style={{ color: 'red' }}>Error loading account</Text>
-        <Text>{(error as any)?.message || 'Something went wrong'}</Text>
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pl-PL') + ' ' + date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const renderTicket = ({ item }: { item: Ticket }) => (
+    <View style={styles.ticketCard}>
+      <View style={styles.ticketInfo}>
+        <Text variant="headlineSmall" style={styles.cinemaName}>
+          {item.cinemaName}
+        </Text>
+        <Text variant="bodyMedium" style={styles.screeningTime}>
+          {formatDate(item.screeningTime)}
+        </Text>
       </View>
+      <View style={styles.qrContainer}>
+        <Image
+          source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${item.qrCodeToken}` }}
+          style={styles.qrCode}
+        />
+      </View>
+    </View>
+  );
+
+  if (!isAuthenticated) {
+    return (
+      <SafeAreaView style={styles.authContainer}>
+        {authMode === 'login' ? (
+          <LoginView 
+            onLogin={(email, pass) => handleLogin({ email, password: pass })} 
+            onSwitchToRegister={() => setAuthMode('register')}
+            isLoading={isAuthLoading}
+            error={authError}
+          />
+        ) : (
+          <RegisterView 
+            onRegister={(name, email, pass) => handleRegister({ fullName: name, email, password: pass })} 
+            onSwitchToLogin={() => setAuthMode('login')}
+            isLoading={isAuthLoading}
+            error={authError}
+          />
+        )}
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Avatar.Image size={100} source={{ uri: user?.avatarUrl }} />
-        <Title style={styles.name}>{user?.name}</Title>
-        <Paragraph>{user?.email}</Paragraph>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.headerRow}>
+        <View style={styles.userInfo}>
+          <Text variant="displaySmall" style={styles.title}>
+            Your tickets
+          </Text>
+          <Text style={styles.userEmail}>{user?.email}</Text>
+        </View>
+        <TouchableOpacity onPress={logout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.content}>
-        <Card style={styles.card}>
-          <Card.Content>
-            <Title>Settings</Title>
-            <Paragraph>Manage your profile and preferences.</Paragraph>
-          </Card.Content>
-          <Card.Actions>
-            <Button mode="contained-tonal" style={styles.button}>Edit Profile</Button>
-          </Card.Actions>
-        </Card>
-
-        <Button 
-          mode="contained" 
-          onPress={() => console.log('Log out')} 
-          style={styles.logoutButton}
-          buttonColor="#B00020"
-        >
-          Log Out
-        </Button>
-      </View>
-    </View>
+      {isTicketsLoading ? (
+        <View style={styles.center}>
+          <ActivityIndicator animating={true} size="large" color="#6200ee" />
+        </View>
+      ) : (
+        <FlatList
+          data={tickets}
+          renderItem={renderTicket}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={<Text style={styles.emptyText}>No tickets found</Text>}
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#EDF1F9',
+    paddingHorizontal: 20,
   },
-  header: {
+  authContainer: {
+    flex: 1,
+    backgroundColor: '#EDF1F9',
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 50,
-    backgroundColor: 'white',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    elevation: 2,
   },
-  name: {
-    marginTop: 10,
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  content: {
-    padding: 16,
-  },
-  card: {
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingTop: 20,
     marginBottom: 20,
-    elevation: 4,
   },
-  button: {
-    width: '100%',
+  userInfo: {
+    flex: 1,
   },
-  logoutButton: {
-    marginTop: 20,
+  title: {
+    fontWeight: '700',
+    color: '#1A1A1A',
+    marginLeft: 5,
+  },
+  userEmail: {
+    marginLeft: 5,
+    color: '#666',
+    fontSize: 14,
+  },
+  logoutText: {
+    color: '#B00020',
+    fontWeight: 'bold',
+    padding: 10,
+  },
+  listContent: {
+    paddingBottom: 20,
+  },
+  ticketCard: {
+    backgroundColor: '#9DB4FF',
+    borderRadius: 5,
+    flexDirection: 'row',
+    padding: 20,
+    marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  ticketInfo: {
+    flex: 1,
+  },
+  cinemaName: {
+    fontWeight: 'bold',
+    color: '#000',
+    fontSize: 28,
+  },
+  screeningTime: {
+    color: '#333',
+    marginTop: 4,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  qrContainer: {
+    backgroundColor: '#FFF',
+    padding: 4,
+    borderRadius: 4,
+  },
+  qrCode: {
+    width: 80,
+    height: 80,
   },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#EDF1F9',
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 50,
+    fontSize: 16,
+    color: '#666',
   },
 });
 

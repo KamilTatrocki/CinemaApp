@@ -39,9 +39,9 @@ public class DataSeeder implements CommandLineRunner {
     private void seedUsers() {
         if (userRepository.count() == 0) {
             User admin = User.builder()
-                    .email("admin@cinema.com")
+                    .email("a@op.pl")
                     .fullName("Admin User")
-                    .passwordHash(passwordEncoder.encode("admin123"))
+                    .passwordHash(passwordEncoder.encode("a"))
                     .role("ROLE_ADMIN")
                     .build();
 

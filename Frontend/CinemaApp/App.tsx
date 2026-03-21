@@ -5,6 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
 import TabNavigator from './src/navigation/TabNavigator';
 
+import { AuthProvider } from './src/context/AuthContext';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,13 +19,15 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <PaperProvider>
-          <NavigationIndependentTree>
-            <NavigationContainer>
-              <TabNavigator />
-            </NavigationContainer>
-          </NavigationIndependentTree>
-        </PaperProvider>
+        <AuthProvider>
+          <PaperProvider>
+            <NavigationIndependentTree>
+              <NavigationContainer>
+                <TabNavigator />
+              </NavigationContainer>
+            </NavigationIndependentTree>
+          </PaperProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
   );
