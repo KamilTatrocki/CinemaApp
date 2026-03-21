@@ -10,14 +10,14 @@ interface LoginViewProps {
 }
 
 const LoginView: React.FC<LoginViewProps> = ({ onLogin, onSwitchToRegister, isLoading, error }) => {
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('test@op.pl');
+  const [password, setPassword] = useState('123456');
 
   return (
     <View style={styles.container}>
       <Title style={styles.title}>Login</Title>
       <Text style={styles.subtitle}>Welcome back! Please login to your account.</Text>
-      
+
       {error && <Text style={styles.errorText}>{error}</Text>}
 
       <TextInput
@@ -29,7 +29,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onSwitchToRegister, isLo
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      
+
       <TextInput
         label="Password"
         value={password}
