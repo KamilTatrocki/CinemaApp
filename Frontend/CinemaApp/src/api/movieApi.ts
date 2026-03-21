@@ -1,10 +1,9 @@
 import { Movie } from '../models/Movie';
 
-const BASE_URL = 'http://localhost:8081'; // Standard Android emulator localhost; change if needed
-
 export const fetchMovies = async (status?: string): Promise<Movie[]> => {
   try {
-    const url = status ? `${BASE_URL}/movies?status=${status}` : `${BASE_URL}/movies`;
+    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081';
+    const url = status ? `${baseUrl}/movies?status=${status}` : `${baseUrl}/movies`;
     const response = await fetch(url);
 
     if (!response.ok) {
