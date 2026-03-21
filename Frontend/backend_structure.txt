@@ -1,0 +1,221 @@
+=========================================
+CINEMA APP - API DOCUMENTATION FOR FRONTEND
+=========================================
+
+-----------------------------------------
+1. API ENDPOINTS
+-----------------------------------------
+
+### AUTHENTICATION (/auth)
+- POST /auth/register
+  - Request: RegisterRequest
+  - Response: AuthResponse
+- POST /auth/login
+  - Request: LoginRequest
+  - Response: AuthResponse
+
+### BOOKINGS (/bookings) [Requires Auth]
+- POST /bookings
+  - Request: BookingRequest
+  - Response: ReservationResponse
+- POST /bookings/{id}/pay
+  - Response: ReservationResponse
+- DELETE /bookings/{id}
+  - Description: Cancel a booking
+
+### CINEMAS (/cinemas)
+- GET /cinemas
+  - Response: List<CinemaResponse>
+
+### MOVIES (/movies)
+- GET /movies
+  - Query Params: status (string, optional)
+  - Response: List<MovieResponse>
+- GET /movies/{id}
+  - Response: MovieDetailResponse
+- GET /movies/search
+  - Query Params: title (string)
+  - Response: List<MovieResponse>
+
+### PROMOTIONS (/promotions)
+- GET /promotions
+  - Response: List<PromotionResponse>
+
+### SCREENINGS AND SEATS
+- GET /movies/{movieId}/screenings
+  - Query Params: cinemaId (long, optional)
+  - Response: List<ScreeningResponse>
+- GET /screenings/{id}/seats
+  - Response: List<SeatStatusResponse>
+
+### TICKET TYPES (/ticket-types)
+- GET /ticket-types
+  - Response: List<TicketTypeResponse>
+
+### USER PROFILE (/users) [Requires Auth]
+- GET /users/me
+  - Response: UserResponse (current profile)
+- PATCH /users/me
+  - Request: UpdateUserRequest
+  - Response: UserResponse
+- GET /users/me/tickets
+  - Response: List<TicketResponse> (user's purchased/reserved tickets)
+
+
+-----------------------------------------
+2. DATA MODELS (DTOs)
+-----------------------------------------
+
+### REQUEST MODELS
+
+RegisterRequest {
+  String email;
+  String password; // min 6 chars
+  String fullName;
+}
+
+LoginRequest {
+  String email;
+  String password;
+}
+
+BookingRequest {
+  Long screeningId;
+  List<TicketItem> tickets;
+}
+
+BookingRequest.TicketItem {
+  Long seatId;
+  Long ticketTypeId;
+}
+
+UpdateUserRequest {
+  String fullName;
+  String password; // optional
+}
+
+
+### RESPONSE MODELS
+
+AuthResponse {
+  String token;
+  String tokenType; // (e.g., Bearer)
+  UserResponse user;
+}
+
+CinemaResponse {
+  Long id;
+  String name;
+  String city;
+  String address;
+}
+
+MovieResponse {
+  Long id;
+  String title;
+  Integer durationMinutes;
+  Integer releaseYear;
+  BigDecimal rating;
+  String status; // e.g., NOW_PLAYING, COMING_SOON
+}
+
+MovieDetailResponse {
+  Long id;
+  String title;
+  String description;
+  Integer durationMinutes;
+  Integer releaseYear;
+  BigDecimal rating;
+  String status;
+}
+
+PromotionResponse {
+  Long id;
+  String title;
+  String description;
+}
+
+ReservationResponse {
+  Long id;
+  Long screeningId;
+  String movieTitle;
+  LocalDateTime screeningTime;
+  BigDecimal totalPrice;
+  String status; // e.g., PENDING, PAID, CANCELLED
+  LocalDateTime createdAt;
+}
+
+ScreeningResponse {
+  Long id;
+  Long movieId;
+  String movieTitle;
+  Long hallId;
+  String hallName;
+  Long cinemaId;
+  String cinemaName;
+  LocalDateTime startTime;
+  BigDecimal basePrice;
+}
+
+SeatStatusResponse {
+  Long id;
+  String rowLabel;
+  Integer seatNumber;
+  String type; // e.g., REGULAR, VIP
+  boolean occupied;
+}
+
+TicketResponse {
+  Long id;
+  Long reservationId;
+  String movieTitle;
+  String cinemaName;
+  LocalDateTime screeningTime;
+  String rowLabel;
+  Integer seatNumber;
+  String seatType;
+  String ticketTypeName;
+  BigDecimal price;
+  String qrCodeToken;
+  String reservationStatus;
+}
+
+TicketTypeResponse {
+  Long id;
+  String name; // e.g., Normal, Student, Senior
+  Integer discountPercentage;
+}
+
+UserResponse {
+  Long id;
+  String email;
+  String fullName;
+  String role;
+}
+
+### ERROR MODELS AND VALIDATION
+
+ErrorResponse {
+  int status;         // HTTP Status Code (e.g., 404, 400, 401)
+  String error;       // Error Reason (e.g., "Not Found")
+  String message;     // Descriptive error message
+  String path;        // Requested endpoint path
+  LocalDateTime timestamp;
+}
+
+Validation Error Response (400 Bad Request) {
+  int status;         // 400
+  String error;       // "Validation Failed"
+  Map<String, String> fields; // Key: field name, Value: validation message
+  String path;
+  LocalDateTime timestamp;
+}
+
+-----------------------------------------
+3. GENERAL INFO
+-----------------------------------------
+- **Base URL:** (Likely /api or /)
+- **CORS:** Enabled for frontend origin.
+- **Authentication:** JWT (JSON Web Token). Include in Authorization header: `Bearer {token}`.
+- **Date format:** LocalDateTime values are ISO 8601 (e.g., "2024-03-21T18:00:00").
+- **BigDecimal:** Returned as numbers (usually with 2 decimal places).
