@@ -29,13 +29,13 @@ const TabNavigator = () => {
         headerShown: true,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
       <Tab.Screen
         name="Movies"
         component={MoviesScreen}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 };

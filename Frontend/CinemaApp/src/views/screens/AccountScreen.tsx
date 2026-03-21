@@ -10,14 +10,14 @@ import RegisterView from '../components/Auth/RegisterView';
 
 const AccountScreen = () => {
   const { tickets, isLoading: isTicketsLoading } = useUserViewModel();
-  const { 
-    isAuthenticated, 
-    user, 
-    handleLogin, 
-    handleRegister, 
-    logout, 
-    isLoading: isAuthLoading, 
-    error: authError 
+  const {
+    isAuthenticated,
+    user,
+    handleLogin,
+    handleRegister,
+    logout,
+    isLoading: isAuthLoading,
+    error: authError
   } = useAuthViewModel();
 
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
@@ -50,15 +50,15 @@ const AccountScreen = () => {
     return (
       <SafeAreaView style={styles.authContainer}>
         {authMode === 'login' ? (
-          <LoginView 
-            onLogin={(email, pass) => handleLogin({ email, password: pass })} 
+          <LoginView
+            onLogin={(email, pass) => handleLogin({ email, password: pass })}
             onSwitchToRegister={() => setAuthMode('register')}
             isLoading={isAuthLoading}
             error={authError}
           />
         ) : (
-          <RegisterView 
-            onRegister={(name, email, pass) => handleRegister({ fullName: name, email, password: pass })} 
+          <RegisterView
+            onRegister={(name, email, pass) => handleRegister({ fullName: name, email, password: pass })}
             onSwitchToLogin={() => setAuthMode('login')}
             isLoading={isAuthLoading}
             error={authError}
@@ -77,9 +77,15 @@ const AccountScreen = () => {
           </Text>
           <Text style={styles.userEmail}>{user?.email}</Text>
         </View>
-        <TouchableOpacity onPress={logout}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        <Button
+          mode="contained"
+          onPress={logout}
+          style={styles.logoutButton}
+          buttonColor="#B00020"
+          textColor="white"
+        >
+          Logout
+        </Button>
       </View>
 
       {isTicketsLoading ? (
@@ -103,19 +109,19 @@ const AccountScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EDF1F9',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 20,
   },
   authContainer: {
     flex: 1,
-    backgroundColor: '#EDF1F9',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingTop: 20,
     marginBottom: 20,
   },
@@ -132,10 +138,8 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 14,
   },
-  logoutText: {
-    color: '#B00020',
-    fontWeight: 'bold',
-    padding: 10,
+  logoutButton: {
+    borderRadius: 8,
   },
   listContent: {
     paddingBottom: 20,
