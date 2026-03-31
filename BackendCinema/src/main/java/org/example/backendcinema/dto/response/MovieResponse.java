@@ -13,5 +13,6 @@ public class MovieResponse {
     private Integer durationMinutes;
     private Integer releaseYear;
     private BigDecimal rating;
+    private String mediaUrl;
     private String status;
 }
