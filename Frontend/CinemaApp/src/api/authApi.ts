@@ -1,6 +1,6 @@
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/Auth';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
 
 export const login = async (request: LoginRequest): Promise<AuthResponse> => {
   const response = await fetch(`${API_URL}/auth/login`, {
