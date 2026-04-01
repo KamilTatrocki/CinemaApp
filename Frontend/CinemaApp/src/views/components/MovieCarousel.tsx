@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, Animated, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
 
 const { width } = Dimensions.get('window');
@@ -14,6 +15,7 @@ interface MovieCarouselProps {
 
 const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation<any>();
 
   if (!movies || movies.length === 0) {
     return (
@@ -60,15 +62,17 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
 
           return (
             <View style={styles.movieItemContainer}>
-              <Animated.View style={[styles.movieImageContainer, { transform: [{ scale }] }]}>
-                {finalImageUrl ? (
-                  <Image source={{ uri: finalImageUrl }} style={styles.movieImage} />
-                ) : (
-                  <View style={styles.noImageContainer}>
-                    <Text style={{ color: '#aaa' }}>No Image</Text>
-                  </View>
-                )}
-              </Animated.View>
+              <TouchableOpacity onPress={() => navigation.navigate('MovieDetail', { movie: item })} activeOpacity={0.9}>
+                <Animated.View style={[styles.movieImageContainer, { transform: [{ scale }] }]}>
+                  {finalImageUrl ? (
+                    <Image source={{ uri: finalImageUrl }} style={styles.movieImage} />
+                  ) : (
+                    <View style={styles.noImageContainer}>
+                      <Text style={{ color: '#aaa' }}>No Image</Text>
+                    </View>
+                  )}
+                </Animated.View>
+              </TouchableOpacity>
             </View>
           );
         }}

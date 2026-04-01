@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
 import { Text, ActivityIndicator, Card, Surface } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Movie } from '../../models/Movie';
 
@@ -22,8 +23,10 @@ const MovieCard = ({ item }: MovieCardProps) => {
       finalImageUrl = item.mediaUrl;
   }
 
+  const navigation = useNavigation<any>();
+
   return (
-    <Card style={styles.card} mode="contained">
+    <Card style={styles.card} mode="contained" onPress={() => navigation.navigate('MovieDetail', { movie: item })}>
       <Surface style={styles.imagePlaceholder} elevation={1}>
         {finalImageUrl && !imageError ? (
           <>
