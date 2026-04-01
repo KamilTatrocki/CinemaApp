@@ -1,4 +1,3 @@
-Treść wiadomości Gemini
 LISTA ENDPOINTÓW - PROJEKT KINO
 
 1. ENDPOINTY WYMAGANE (Niezbędne do działania UI ze screena)
