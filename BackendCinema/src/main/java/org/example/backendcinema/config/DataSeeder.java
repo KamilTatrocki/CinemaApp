@@ -65,6 +65,7 @@ public class DataSeeder implements CommandLineRunner {
                     .releaseYear(2010)
                     .rating(new BigDecimal("8.8"))
                     .status("now-playing")
+                    .mediaUrl("/uploads/inception.jpg")
                     .build();
 
             Movie movie2 = Movie.builder()
@@ -73,6 +74,7 @@ public class DataSeeder implements CommandLineRunner {
                     .durationMinutes(169)
                     .releaseYear(2014)
                     .rating(new BigDecimal("8.7"))
+                    .mediaUrl("/uploads/interstellar.jpg")
                     .status("now-playing")
                     .build();
 
@@ -82,6 +84,7 @@ public class DataSeeder implements CommandLineRunner {
                     .durationMinutes(166)
                     .releaseYear(2024)
                     .rating(new BigDecimal("9.0"))
+                    .mediaUrl("/uploads/dune.jpg")
                     .status("upcoming")
                     .build();
 

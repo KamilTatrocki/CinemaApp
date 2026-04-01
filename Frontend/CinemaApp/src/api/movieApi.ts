@@ -2,7 +2,7 @@ import { Movie } from '../models/Movie';
 
 export const fetchMovies = async (status?: string): Promise<Movie[]> => {
   try {
-    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081';
+    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
     const url = status ? `${baseUrl}/movies?status=${status}` : `${baseUrl}/movies`;
     const response = await fetch(url);
 

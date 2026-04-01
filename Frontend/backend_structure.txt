@@ -116,6 +116,7 @@ MovieResponse {
   Integer durationMinutes;
   Integer releaseYear;
   BigDecimal rating;
+  String mediaUrl;
   String status; // e.g., NOW_PLAYING, COMING_SOON
 }
 
@@ -126,6 +127,7 @@ MovieDetailResponse {
   Integer durationMinutes;
   Integer releaseYear;
   BigDecimal rating;
+  String mediaUrl;
   String status;
 }
 
