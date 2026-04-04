@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, List } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useScreeningsViewModel } from '../../viewmodels/useScreeningsViewModel';
@@ -16,7 +16,7 @@ const ScreeningsScreen = () => {
     screenings,
     dates,
     activeDate,
-    activeScreenings,
+    activeScreeningsByCinema,
     setSelectedDate
   } = useScreeningsViewModel(movieId);
 
@@ -68,22 +68,31 @@ const ScreeningsScreen = () => {
           </View>
 
           <ScrollView style={styles.screeningsList}>
-            {activeScreenings.map((screening) => {
-              const time = new Date(screening.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              return (
-                <TouchableOpacity
-                  key={screening.id}
-                  style={styles.screeningCard}
-                  onPress={() => navigation.navigate('SeatSelection', { screeningId: screening.id })}
-                >
-                  <View style={styles.screeningInfo}>
-                    <Text style={styles.timeText}>{time}</Text>
-                    <Text style={styles.hallText}>{screening.cinemaName} - {screening.hallName}</Text>
-                  </View>
-                  <MaterialCommunityIcons name="chevron-right" size={24} color="#666" />
-                </TouchableOpacity>
-              );
-            })}
+            {Object.entries(activeScreeningsByCinema).map(([cinemaName, screenings]) => (
+              <List.Accordion
+                key={cinemaName}
+                title={cinemaName}
+                titleStyle={styles.accordionTitle}
+                left={props => <List.Icon {...props} icon="domain" />}
+                style={styles.accordion}
+              >
+                <View style={styles.screeningsGrid}>
+                  {screenings.map((screening) => {
+                    const time = new Date(screening.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    return (
+                      <TouchableOpacity
+                        key={screening.id}
+                        style={styles.timeBadge}
+                        onPress={() => navigation.navigate('SeatSelection', { screeningId: screening.id })}
+                      >
+                        <Text style={styles.timeBadgeText}>{time}</Text>
+                        <Text style={styles.hallBadgeText}>{screening.hallName}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              </List.Accordion>
+            ))}
           </ScrollView>
         </>
       )}
@@ -147,36 +156,45 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  screeningCard: {
-    backgroundColor: '#FFF',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  screeningInfo: {
-    flexDirection: 'column',
-  },
-  timeText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#111',
-    marginBottom: 4,
-  },
-  hallText: {
-    fontSize: 14,
-    color: '#666',
-  },
   noScreeningText: {
     fontSize: 16,
     color: '#555',
+  },
+  accordion: {
+    backgroundColor: '#FFF',
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+  accordionTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  screeningsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 12,
+    backgroundColor: '#F9F9F9',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  timeBadge: {
+    backgroundColor: '#0000FF',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    margin: 6,
+    alignItems: 'center',
+    minWidth: 80,
+  },
+  timeBadgeText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  hallBadgeText: {
+    color: '#E0E0FF',
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 

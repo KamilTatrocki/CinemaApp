@@ -12,19 +12,23 @@ export const useScreeningsViewModel = (movieId: number) => {
     enabled: !!movieId,
   });
 
-  // Group by date
+  // Group by date and then by cinema
   const screeningsByDate = (screenings || []).reduce((acc, screening) => {
     const date = new Date(screening.startTime).toLocaleDateString();
     if (!acc[date]) {
-      acc[date] = [];
+      acc[date] = {};
     }
-    acc[date].push(screening);
+    const cinema = screening.cinemaName;
+    if (!acc[date][cinema]) {
+      acc[date][cinema] = [];
+    }
+    acc[date][cinema].push(screening);
     return acc;
-  }, {} as Record<string, ScreeningResponse[]>);
+  }, {} as Record<string, Record<string, ScreeningResponse[]>>);
   
   const dates = Object.keys(screeningsByDate);
   const activeDate = selectedDate || dates[0];
-  const activeScreenings = screeningsByDate[activeDate] || [];
+  const activeScreeningsByCinema = screeningsByDate[activeDate] || {};
 
   return {
     isLoading,
@@ -32,7 +36,7 @@ export const useScreeningsViewModel = (movieId: number) => {
     screenings,
     dates,
     activeDate,
-    activeScreenings,
+    activeScreeningsByCinema,
     setSelectedDate
   };
 };
