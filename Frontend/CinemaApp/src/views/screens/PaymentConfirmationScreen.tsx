@@ -18,25 +18,25 @@ const PaymentConfirmationScreen = () => {
 
         <Text style={styles.title}>Payment Successful!</Text>
         <Text style={styles.message}>
-          Your tickets for <Text style={{fontWeight:'bold'}}>{reservation.movieTitle}</Text> have been successfully booked.
+          Your tickets for <Text style={{ fontWeight: 'bold' }}>{reservation.movieTitle}</Text> have been successfully booked.
         </Text>
-        
+
         <View style={styles.detailsBox}>
-            <Text style={styles.detailText}>Reservation ID: {reservation.id}</Text>
-            <Text style={styles.detailText}>Status: {reservation.status}</Text>
+          <Text style={styles.detailText}>Reservation ID: {reservation.id}</Text>
+          <Text style={styles.detailText}>Status: {reservation.status}</Text>
         </View>
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.doneButton} 
-          onPress={() => navigation.navigate('MainTabs', { screen: 'Tickets' })}
+        <TouchableOpacity
+          style={styles.doneButton}
+          onPress={() => navigation.navigate('MainTabs', { screen: 'Account' })}
         >
           <Text style={styles.doneButtonText}>VIEW TICKETS</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.homeButton} 
+
+        <TouchableOpacity
+          style={styles.homeButton}
           onPress={() => navigation.navigate('MainTabs')}
         >
           <Text style={styles.homeButtonText}>GO TO HOME</Text>
@@ -78,17 +78,17 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   detailsBox: {
-      backgroundColor: '#F8F9FA',
-      padding: 20,
-      borderRadius: 16,
-      width: '100%',
-      alignItems: 'center',
+    backgroundColor: '#F8F9FA',
+    padding: 20,
+    borderRadius: 16,
+    width: '100%',
+    alignItems: 'center',
   },
   detailText: {
-      fontSize: 14,
-      color: '#444',
-      marginBottom: 4,
-      fontFamily: 'monospace'
+    fontSize: 14,
+    color: '#444',
+    marginBottom: 4,
+    fontFamily: 'monospace'
   },
   footer: {
     padding: 24,
