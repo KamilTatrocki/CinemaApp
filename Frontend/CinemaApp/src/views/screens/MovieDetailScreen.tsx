@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('window');
 
 const MovieDetailScreen = () => {
   const route = useRoute();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const movie = (route.params as any)?.movie as Movie;
 
   if (!movie) {
@@ -81,7 +81,10 @@ const MovieDetailScreen = () => {
         </Text>
         
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.bookButton}>
+          <TouchableOpacity 
+            style={styles.bookButton}
+            onPress={() => navigation.navigate('Screenings', { movieId: movie.id })}
+          >
             <Text style={styles.bookButtonText}>BOOK TICKETS NOW</Text>
           </TouchableOpacity>
         </View>
