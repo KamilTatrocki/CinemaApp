@@ -4,12 +4,14 @@ import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
+import { useAuth } from '../../context/AuthContext';
 
 const { width, height } = Dimensions.get('window');
 
 const MovieDetailScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
+  const { isAuthenticated } = useAuth();
   const movie = (route.params as any)?.movie as Movie;
 
   if (!movie) {
@@ -83,7 +85,13 @@ const MovieDetailScreen = () => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity 
             style={styles.bookButton}
-            onPress={() => navigation.navigate('Screenings', { movieId: movie.id })}
+            onPress={() => {
+              if (isAuthenticated) {
+                navigation.navigate('Screenings', { movieId: movie.id });
+              } else {
+                navigation.navigate('MainTabs', { screen: 'Account' });
+              }
+            }}
           >
             <Text style={styles.bookButtonText}>BOOK TICKETS NOW</Text>
           </TouchableOpacity>
