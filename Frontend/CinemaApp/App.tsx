@@ -3,9 +3,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './src/navigation/TabNavigator';
+import MovieDetailScreen from './src/views/screens/MovieDetailScreen';
 
 import { AuthProvider } from './src/context/AuthContext';
+
+const Stack = createNativeStackNavigator();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,7 +27,10 @@ const App = () => {
           <PaperProvider>
             <NavigationIndependentTree>
               <NavigationContainer>
-                <TabNavigator />
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="MainTabs" component={TabNavigator} />
+                  <Stack.Screen name="MovieDetail" component={MovieDetailScreen} />
+                </Stack.Navigator>
               </NavigationContainer>
             </NavigationIndependentTree>
           </PaperProvider>
