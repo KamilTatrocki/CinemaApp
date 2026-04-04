@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { fetchScreenings } from '../../api/bookingApi';
-import { ScreeningResponse } from '../../models/BookingModels';
+import { useScreeningsViewModel } from '../../viewmodels/useScreeningsViewModel';
 
 const ScreeningsScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const movieId = (route.params as any)?.movieId;
   
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
-  const { data: screenings, isLoading, isError } = useQuery({
-    queryKey: ['screenings', movieId],
-    queryFn: () => fetchScreenings(movieId),
-    enabled: !!movieId,
-  });
+  const {
+    isLoading,
+    isError,
+    screenings,
+    dates,
+    activeDate,
+    activeScreenings,
+    setSelectedDate
+  } = useScreeningsViewModel(movieId);
 
   if (isLoading) {
     return (
@@ -35,20 +35,6 @@ const ScreeningsScreen = () => {
       </View>
     );
   }
-
-  // Group by date
-  const screeningsByDate = screenings.reduce((acc, screening) => {
-    const date = new Date(screening.startTime).toLocaleDateString();
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(screening);
-    return acc;
-  }, {} as Record<string, ScreeningResponse[]>);
-  
-  const dates = Object.keys(screeningsByDate);
-  const activeDate = selectedDate || dates[0];
-  const activeScreenings = screeningsByDate[activeDate] || [];
 
   return (
     <View style={styles.container}>

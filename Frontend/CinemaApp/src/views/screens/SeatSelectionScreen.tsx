@@ -1,23 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { fetchSeats } from '../../api/bookingApi';
+import { useSeatSelectionViewModel } from '../../viewmodels/useSeatSelectionViewModel';
 
 const SeatSelectionScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const screeningId = (route.params as any)?.screeningId;
 
-  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-
-  const { data: seats, isLoading, isError } = useQuery({
-    queryKey: ['seats', screeningId],
-    queryFn: () => fetchSeats(screeningId),
-    enabled: !!screeningId,
-  });
+  const {
+    isLoading,
+    isError,
+    seats,
+    selectedSeats,
+    toggleSeat,
+    rows,
+    sortedRowKeys
+  } = useSeatSelectionViewModel(screeningId);
 
   if (isLoading) {
     return (
@@ -35,29 +36,9 @@ const SeatSelectionScreen = () => {
     );
   }
 
-  const toggleSeat = (seatId: number) => {
-    setSelectedSeats(prev => 
-      prev.includes(seatId) 
-        ? prev.filter(id => id !== seatId)
-        : [...prev, seatId]
-    );
-  };
-
   const proceedToTickets = () => {
     navigation.navigate('TicketSelection', { screeningId, selectedSeats });
   };
-
-  // Group seats by row
-  const rows = seats.reduce((acc, seat) => {
-    if (!acc[seat.rowLabel]) {
-      acc[seat.rowLabel] = [];
-    }
-    acc[seat.rowLabel].push(seat);
-    return acc;
-  }, {} as Record<string, typeof seats>);
-
-  // Sort rows Alphabetically A-Z and seats numerically
-  const sortedRowKeys = Object.keys(rows).sort();
 
   return (
     <View style={styles.container}>

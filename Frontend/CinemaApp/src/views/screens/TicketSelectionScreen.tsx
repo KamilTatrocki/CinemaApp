@@ -1,36 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { fetchTicketTypes } from '../../api/bookingApi';
-import { TicketTypeResponse } from '../../models/BookingModels';
+import { useTicketSelectionViewModel } from '../../viewmodels/useTicketSelectionViewModel';
 
 const TicketSelectionScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const { screeningId, selectedSeats } = route.params as any;
 
-  const { data: ticketTypes, isLoading, isError } = useQuery({
-    queryKey: ['ticketTypes'],
-    queryFn: fetchTicketTypes,
-  });
-
-  const [ticketAssignments, setTicketAssignments] = useState<Record<number, number>>({});
-
-  useEffect(() => {
-    // default all seats to the first ticket type
-    if (ticketTypes && ticketTypes.length > 0 && selectedSeats.length > 0) {
-      if (Object.keys(ticketAssignments).length === 0) {
-        const initialAssignments: Record<number, number> = {};
-        selectedSeats.forEach((seatId: number) => {
-          initialAssignments[seatId] = ticketTypes[0].id;
-        });
-        setTicketAssignments(initialAssignments);
-      }
-    }
-  }, [ticketTypes, selectedSeats]);
+  const {
+    isLoading,
+    isError,
+    ticketTypes,
+    ticketAssignments,
+    setTicketTypeForSeat,
+  } = useTicketSelectionViewModel(selectedSeats);
 
   if (isLoading) {
     return (
@@ -47,10 +33,6 @@ const TicketSelectionScreen = () => {
       </View>
     );
   }
-
-  const setTicketTypeForSeat = (seatId: number, typeId: number) => {
-    setTicketAssignments(prev => ({ ...prev, [seatId]: typeId }));
-  };
 
   const proceedToReview = () => {
     const tickets = selectedSeats.map((seatId: number) => ({

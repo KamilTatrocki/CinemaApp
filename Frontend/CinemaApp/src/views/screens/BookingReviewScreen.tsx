@@ -1,41 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { createBooking } from '../../api/bookingApi';
-import { useAuth } from '../../context/AuthContext';
-import { BookingRequest } from '../../models/BookingModels';
+import { useBookingReviewViewModel } from '../../viewmodels/useBookingReviewViewModel';
 
 const BookingReviewScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const { screeningId, tickets } = route.params as { screeningId: number, tickets: any[] };
   
-  const { token, isAuthenticated } = useAuth();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isSubmitting, handleBooking } = useBookingReviewViewModel();
 
-  const handleBooking = async () => {
-    if (!isAuthenticated || !token) {
-      Alert.alert('Authentication Required', 'You must be logged in to create a reservation. Please log in from the Profile tab and try again.');
-      // Optionally redirect to login, but since tab context might be complex, alerting is safe
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const request: BookingRequest = {
-        screeningId,
-        tickets,
-      };
-      
-      const reservation = await createBooking(request, token);
-      navigation.navigate('Payment', { reservation });
-    } catch (error: any) {
-      Alert.alert('Booking Error', error.message || 'There was an issue creating your reservation.');
-    } finally {
-      setIsSubmitting(false);
-    }
+  const onBookPress = () => {
+    handleBooking(
+      screeningId,
+      tickets,
+      (reservation) => navigation.navigate('Payment', { reservation }),
+      (errorMsg) => Alert.alert('Booking Error', errorMsg)
+    );
   };
 
   return (
@@ -69,7 +52,7 @@ const BookingReviewScreen = () => {
       <View style={styles.footer}>
         <TouchableOpacity 
           style={styles.bookButton} 
-          onPress={handleBooking}
+          onPress={onBookPress}
           disabled={isSubmitting}
         >
           {isSubmitting ? (

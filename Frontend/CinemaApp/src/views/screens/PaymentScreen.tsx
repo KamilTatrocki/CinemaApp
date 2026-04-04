@@ -1,36 +1,31 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native';
 import { Text } from 'react-native-paper';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { payBooking } from '../../api/bookingApi';
-import { useAuth } from '../../context/AuthContext';
+import { usePaymentViewModel } from '../../viewmodels/usePaymentViewModel';
 
 const PaymentScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const { reservation } = route.params as any;
-  const { token } = useAuth();
   
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { isProcessing, handlePayment } = usePaymentViewModel();
 
-  const handlePayment = async () => {
-    if (!token) return;
-    setIsProcessing(true);
-    try {
-      const confirmedReservation = await payBooking(reservation.id, token);
-      navigation.reset({
-        index: 0,
-        routes: [
-          { name: 'MainTabs' as never },
-          { name: 'PaymentConfirmation' as never, params: { reservation: confirmedReservation } as never }
-        ],
-      });
-    } catch (error) {
-      alert('Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const onPayPress = () => {
+    handlePayment(
+      reservation.id,
+      (confirmedReservation) => {
+        navigation.reset({
+          index: 0,
+          routes: [
+            { name: 'MainTabs' as never },
+            { name: 'PaymentConfirmation' as never, params: { reservation: confirmedReservation } as never }
+          ],
+        });
+      },
+      () => Alert.alert('Payment Error', 'Payment failed. Please try again.')
+    );
   };
 
   const formattedPrice = reservation.totalPrice ? `$${reservation.totalPrice.toFixed(2)}` : '$0.00';
@@ -77,7 +72,7 @@ const PaymentScreen = () => {
       <View style={styles.footer}>
         <TouchableOpacity 
           style={styles.payButton} 
-          onPress={handlePayment}
+          onPress={onPayPress}
           disabled={isProcessing}
         >
           {isProcessing ? (
