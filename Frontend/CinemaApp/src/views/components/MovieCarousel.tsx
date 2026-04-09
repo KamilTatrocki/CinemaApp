@@ -25,7 +25,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
 
   return (
     <View>

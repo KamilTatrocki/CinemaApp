@@ -22,10 +22,10 @@ const MovieDetailScreen = () => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
   let finalImageUrl = movie.mediaUrl ? `${baseUrl}${movie.mediaUrl}` : movie.imageUrl;
   if (movie.mediaUrl && movie.mediaUrl.startsWith('http')) {
-      finalImageUrl = movie.mediaUrl;
+    finalImageUrl = movie.mediaUrl;
   }
 
   return (
@@ -35,20 +35,20 @@ const MovieDetailScreen = () => {
         {finalImageUrl ? (
           <Image source={{ uri: finalImageUrl }} style={styles.bannerImage} />
         ) : (
-           <View style={[styles.bannerImage, { backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
-             <MaterialCommunityIcons name="movie" size={64} color="#666" />
-           </View>
+          <View style={[styles.bannerImage, { backgroundColor: '#333', justifyContent: 'center', alignItems: 'center' }]}>
+            <MaterialCommunityIcons name="movie" size={64} color="#666" />
+          </View>
         )}
-        
+
         {/* Top Gradient / Overlay */}
         <View style={styles.bannerOverlay}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
             <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
           </TouchableOpacity>
-          
+
           <View style={styles.titleContainer}>
             <Text style={styles.titleText}>{movie.title}</Text>
             <Text style={styles.subtitleText}>{movie.durationMinutes} min • Rating {movie.rating}/10</Text>
@@ -67,7 +67,7 @@ const MovieDetailScreen = () => {
         {finalImageUrl ? (
           <Image source={{ uri: finalImageUrl }} style={styles.trailerImage} />
         ) : (
-           <View style={[styles.trailerImage, { backgroundColor: '#444' }]} />
+          <View style={[styles.trailerImage, { backgroundColor: '#444' }]} />
         )}
         <View style={styles.trailerOverlay}>
           <Text style={styles.trailerTitle}>OFFICIAL</Text>
@@ -81,9 +81,9 @@ const MovieDetailScreen = () => {
         <Text style={styles.descriptionText}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
         </Text>
-        
+
         <View style={styles.buttonContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.bookButton}
             onPress={() => {
               if (isAuthenticated) {

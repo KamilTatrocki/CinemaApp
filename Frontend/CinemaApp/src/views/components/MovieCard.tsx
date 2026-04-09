@@ -16,11 +16,11 @@ const MovieCard = ({ item }: MovieCardProps) => {
   const [imageError, setImageError] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
   let finalImageUrl = item.mediaUrl ? `${baseUrl}${item.mediaUrl}` : item.imageUrl;
-  
+
   if (item.mediaUrl && item.mediaUrl.startsWith('http')) {
-      finalImageUrl = item.mediaUrl;
+    finalImageUrl = item.mediaUrl;
   }
 
   const navigation = useNavigation<any>();
@@ -35,9 +35,9 @@ const MovieCard = ({ item }: MovieCardProps) => {
                 <ActivityIndicator color="#AAA" />
               </View>
             )}
-            <Image 
-              source={{ uri: finalImageUrl }} 
-              style={styles.image} 
+            <Image
+              source={{ uri: finalImageUrl }}
+              style={styles.image}
               onError={() => {
                 setImageError(true);
                 setIsLoading(false);

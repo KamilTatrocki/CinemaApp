@@ -79,12 +79,12 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
 
             Movie movie3 = Movie.builder()
-                    .title("Dune: Part Two")
+                    .title("India")
                     .description("Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.")
                     .durationMinutes(166)
                     .releaseYear(2024)
                     .rating(new BigDecimal("9.0"))
-                    .mediaUrl("/uploads/dune.jpg")
+                    .mediaUrl("/uploads/india.jpg")
                     .status("upcoming")
                     .build();
 
