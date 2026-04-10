@@ -18,11 +18,11 @@ const TrailerVideo = ({ url }: { url: string }) => {
 
   return (
     <VideoView 
-      style={StyleSheet.absoluteFillObject} 
+      style={{ width: '100%', height: '100%' }} 
       player={player} 
       allowsFullscreen 
       allowsPictureInPicture 
-      contentFit="cover"
+      contentFit="contain"
     />
   );
 };

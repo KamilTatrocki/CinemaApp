@@ -66,7 +66,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.8"))
                     .status("now-playing")
                     .imageUrl("/uploads/inception.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie2 = Movie.builder()
@@ -76,7 +76,7 @@ public class DataSeeder implements CommandLineRunner {
                     .releaseYear(2014)
                     .rating(new BigDecimal("8.7"))
                     .imageUrl("/uploads/interstellar.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .status("now-playing")
                     .build();
 
@@ -87,7 +87,7 @@ public class DataSeeder implements CommandLineRunner {
                     .releaseYear(2024)
                     .rating(new BigDecimal("9.0"))
                     .imageUrl("/uploads/india.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .status("upcoming")
                     .build();
             Movie movie4 = Movie.builder()
@@ -98,7 +98,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("9.0"))
                     .status("now-playing")
                     .imageUrl("/uploads/01.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie5 = Movie.builder()
@@ -109,7 +109,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.9"))
                     .status("now-playing")
                     .imageUrl("/uploads/02.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie6 = Movie.builder()
@@ -120,7 +120,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("9.2"))
                     .status("now-playing")
                     .imageUrl("/uploads/03.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie7 = Movie.builder()
@@ -131,7 +131,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.8"))
                     .status("now-playing")
                     .imageUrl("/uploads/04.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie8 = Movie.builder()
@@ -142,7 +142,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.7"))
                     .status("now-playing")
                     .imageUrl("/uploads/05.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie9 = Movie.builder()
@@ -153,7 +153,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.5"))
                     .status("now-playing")
                     .imageUrl("/uploads/06.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie10 = Movie.builder()
@@ -164,7 +164,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.5"))
                     .status("now-playing")
                     .imageUrl("/uploads/07.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie11 = Movie.builder()
@@ -175,7 +175,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.5"))
                     .status("now-playing")
                     .imageUrl("/uploads/08.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie12 = Movie.builder()
@@ -186,7 +186,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.4"))
                     .status("now-playing")
                     .imageUrl("/uploads/09.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie13 = Movie.builder()
@@ -197,7 +197,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.6"))
                     .status("now-playing")
                     .imageUrl("/uploads/10.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie14 = Movie.builder()
@@ -208,7 +208,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.8"))
                     .status("now-playing")
                     .imageUrl("/uploads/11.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie15 = Movie.builder()
@@ -219,7 +219,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.4"))
                     .status("now-playing")
                     .imageUrl("/uploads/12.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie16 = Movie.builder()
@@ -230,7 +230,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("9.3"))
                     .status("now-playing")
                     .imageUrl("/uploads/13.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie17 = Movie.builder()
@@ -241,7 +241,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.4"))
                     .status("now-playing")
                     .imageUrl("/uploads/14.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             Movie movie18 = Movie.builder()
@@ -252,7 +252,7 @@ public class DataSeeder implements CommandLineRunner {
                     .rating(new BigDecimal("8.4"))
                     .status("now-playing")
                     .imageUrl("/uploads/15.jpg")
-                    .mediaUrl("/uploads/avatar.mp4")
+                    .mediaUrl("/uploads/avatar.mov")
                     .build();
 
             movieRepository.saveAll(List.of(
