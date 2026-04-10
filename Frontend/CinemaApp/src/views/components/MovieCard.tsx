@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Image } from 'expo-image';
 import { Text, ActivityIndicator, Card, Surface } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -36,8 +37,11 @@ const MovieCard = ({ item }: MovieCardProps) => {
               </View>
             )}
             <Image
-              source={{ uri: finalImageUrl }}
+              source={finalImageUrl}
               style={styles.image}
+              contentFit="cover"
+              transition={200}
+              cachePolicy="memory-disk"
               onError={() => {
                 setImageError(true);
                 setIsLoading(false);
@@ -81,7 +85,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   noImageContainer: {
     flex: 1,

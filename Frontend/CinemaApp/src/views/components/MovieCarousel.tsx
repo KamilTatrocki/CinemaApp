@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, Animated, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
@@ -65,7 +66,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
               <TouchableOpacity onPress={() => navigation.navigate('MovieDetail', { movie: item })} activeOpacity={0.9}>
                 <Animated.View style={[styles.movieImageContainer, { transform: [{ scale }] }]}>
                   {finalImageUrl ? (
-                    <Image source={{ uri: finalImageUrl }} style={styles.movieImage} />
+                    <Image source={finalImageUrl} style={styles.movieImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
                   ) : (
                     <View style={styles.noImageContainer}>
                       <Text style={{ color: '#aaa' }}>No Image</Text>
@@ -117,7 +118,6 @@ const styles = StyleSheet.create({
   movieImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   noImageContainer: {
     flex: 1,

@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -33,7 +34,7 @@ const MovieDetailScreen = () => {
       {/* Top Banner section */}
       <View style={styles.bannerContainer}>
         {finalImageUrl ? (
-          <Image source={{ uri: finalImageUrl }} style={styles.bannerImage} />
+          <Image source={finalImageUrl} style={styles.bannerImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
         ) : (
           <View style={[styles.bannerImage, { backgroundColor: '#333', justifyContent: 'center', alignItems: 'center' }]}>
             <MaterialCommunityIcons name="movie" size={64} color="#666" />
@@ -65,7 +66,7 @@ const MovieDetailScreen = () => {
       {/* Trailer Section */}
       <View style={styles.trailerSection}>
         {finalImageUrl ? (
-          <Image source={{ uri: finalImageUrl }} style={styles.trailerImage} />
+          <Image source={finalImageUrl} style={styles.trailerImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
         ) : (
           <View style={[styles.trailerImage, { backgroundColor: '#444' }]} />
         )}
@@ -119,7 +120,6 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   bannerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
   trailerImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   trailerOverlay: {
     ...StyleSheet.absoluteFillObject,

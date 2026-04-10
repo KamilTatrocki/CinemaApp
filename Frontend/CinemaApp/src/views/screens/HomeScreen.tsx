@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Image } from 'expo-image';
 import { Text, ActivityIndicator, Button } from 'react-native-paper';
 import { useHomeViewModel } from '../../viewmodels/useHomeViewModel';
 import { useNavigation } from '@react-navigation/native';
@@ -67,7 +68,7 @@ const HomeScreen = () => {
                 <Image 
                   source={{ uri: 'https://img.icons8.com/color/96/popcorn.png' }} 
                   style={styles.promotionImage} 
-                  resizeMode="contain"
+                  contentFit="contain"
                 />
                 <Text style={styles.promotionTitle} numberOfLines={1}>{promo.title}</Text>
               </View>
