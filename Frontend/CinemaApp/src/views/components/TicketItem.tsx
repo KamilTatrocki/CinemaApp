@@ -1,68 +1,118 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ticket } from '../../models/Ticket';
 
 const TicketItem = ({ ticket }: { ticket: Ticket }) => {
   const [expanded, setExpanded] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const toggleExpand = () => {
+    if (contentHeight === 0) return;
+    const isExpanding = !expanded;
+    setExpanded(isExpanding);
+
+    Animated.spring(animation, {
+      toValue: isExpanding ? 1 : 0,
+      friction: 8,
+      tension: 50,
+      useNativeDriver: false,
+    }).start();
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pl-PL') + ' ' + date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
   };
 
+  const spin = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+    extrapolate: 'clamp',
+  });
+
+  const animatedHeight = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, contentHeight],
+    extrapolate: 'clamp',
+  });
+
+  const animatedOpacity = animation.interpolate({
+    inputRange: [0, 0.8, 1],
+    outputRange: [0, 0.1, 1],
+    extrapolate: 'clamp',
+  });
+
+  const renderTicketBottom = () => (
+    <View style={styles.ticketBottom}>
+      <View style={styles.dottedDivider}>
+        <View style={styles.holeLeft} />
+        <View style={styles.dashedLine} />
+        <View style={styles.holeRight} />
+      </View>
+      
+      <View style={styles.detailsContent}>
+        <View style={styles.detailsGrid}>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>ROW</Text>
+            <Text style={styles.detailValue}>{ticket.rowLabel}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>SEAT</Text>
+            <Text style={styles.detailValue}>{ticket.seatNumber}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Text style={styles.detailLabel}>TYPE</Text>
+            <Text style={styles.detailValue}>{ticket.ticketTypeName}</Text>
+          </View>
+        </View>
+        
+        <View style={styles.qrSection}>
+          <View style={styles.qrContainer}>
+            <Image
+              source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.qrCodeToken}` }}
+              style={styles.qrCodeLarge}
+            />
+          </View>
+          <Text style={styles.statusText}>Status: {ticket.reservationStatus}</Text>
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <TouchableOpacity 
       activeOpacity={0.9}
-      onPress={() => setExpanded(!expanded)}
+      onPress={toggleExpand}
       style={styles.ticketWrapper}
     >
       <View style={styles.ticketTop}>
         <View style={styles.ticketHeader}>
           <Text style={styles.movieTitle}>{ticket.movieTitle}</Text>
-          <MaterialCommunityIcons name={expanded ? "chevron-up" : "chevron-down"} size={24} color="#888" />
+          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+            <MaterialCommunityIcons name="chevron-down" size={24} color="#888" />
+          </Animated.View>
         </View>
         <Text style={styles.cinemaNameText}>{ticket.cinemaName}</Text>
         <Text style={styles.timeText}>{formatDate(ticket.screeningTime)}</Text>
       </View>
 
-      {expanded && (
-        <View style={styles.ticketBottom}>
-          <View style={styles.dottedDivider}>
-            <View style={styles.holeLeft} />
-            <View style={styles.dashedLine} />
-            <View style={styles.holeRight} />
-          </View>
-          
-          <View style={styles.detailsContent}>
-            <View style={styles.detailsGrid}>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>ROW</Text>
-                <Text style={styles.detailValue}>{ticket.rowLabel}</Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>SEAT</Text>
-                <Text style={styles.detailValue}>{ticket.seatNumber}</Text>
-              </View>
-              <View style={styles.detailItem}>
-                <Text style={styles.detailLabel}>TYPE</Text>
-                <Text style={styles.detailValue}>{ticket.ticketTypeName}</Text>
-              </View>
-            </View>
-            
-            <View style={styles.qrSection}>
-              <View style={styles.qrContainer}>
-                <Image
-                  source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${ticket.qrCodeToken}` }}
-                  style={styles.qrCodeLarge}
-                />
-              </View>
-              <Text style={styles.statusText}>Status: {ticket.reservationStatus}</Text>
-            </View>
-          </View>
+      {contentHeight === 0 && (
+        <View 
+          style={styles.hiddenMeasuringView}
+          onLayout={(e) => {
+            setContentHeight(e.nativeEvent.layout.height);
+          }}
+        >
+          {renderTicketBottom()}
         </View>
       )}
+
+      <Animated.View style={{ height: animatedHeight, opacity: animatedOpacity, overflow: 'hidden' }}>
+        {renderTicketBottom()}
+      </Animated.View>
     </TouchableOpacity>
   );
 };
@@ -191,6 +241,12 @@ const styles = StyleSheet.create({
     color: '#0000FF',
     textTransform: 'uppercase',
     letterSpacing: 2,
+  },
+  hiddenMeasuringView: {
+    position: 'absolute',
+    opacity: 0,
+    width: '100%',
+    zIndex: -1,
   },
 });
 

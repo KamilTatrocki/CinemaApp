@@ -18,11 +18,7 @@ const MovieCard = ({ item }: MovieCardProps) => {
   const [isLoading, setIsLoading] = React.useState(true);
 
   const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-  let finalImageUrl = item.mediaUrl ? `${baseUrl}${item.mediaUrl}` : item.imageUrl;
-
-  if (item.mediaUrl && item.mediaUrl.startsWith('http')) {
-    finalImageUrl = item.mediaUrl;
-  }
+  let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
 
   const navigation = useNavigation<any>();
 
