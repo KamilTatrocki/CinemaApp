@@ -128,7 +128,7 @@ public class DataSeeder implements CommandLineRunner {
         List<Seat> seats = new ArrayList<>();
         String[] rows = {"A", "B", "C", "D", "E"};
         for (String row : rows) {
-            for (int number = 1; number <= 10; number++) {
+            for (int number = 1; number < 10; number++) {
                 seats.add(Seat.builder()
                         .hall(hall)
                         .rowLabel(row)
