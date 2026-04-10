@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 20,
+    paddingBottom: 0,
     fontWeight: '700',
     color: '#000',
   },
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
   headerRight: {
     alignItems: 'flex-end',
     marginHorizontal: 16,
-    marginBottom: 20,
-    marginTop: 10,
+    marginBottom: 10,
+    marginTop: 0,
   },
   viewMoreButton: {
     borderRadius: 8,
