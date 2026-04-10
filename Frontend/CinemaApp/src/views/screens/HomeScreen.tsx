@@ -37,13 +37,12 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text variant="headlineLarge" style={styles.header}>
-        Cinema Name
+        LUMIO
       </Text>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        
         <View style={styles.headerRight}>
-          <Button 
-            mode="contained" 
+          <Button
+            mode="contained"
             onPress={() => navigation.navigate('Movies')}
             style={styles.viewMoreButton}
             labelStyle={styles.viewMoreButtonText}
@@ -56,18 +55,18 @@ const HomeScreen = () => {
         <MovieCarousel movies={movies} />
 
         <Text style={styles.promotionsTitle}>promotions</Text>
-        
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.promotionsList}
         >
           {promotions && promotions.length > 0 ? (
             promotions.map(promo => (
               <View key={promo.id} style={styles.promotionCard}>
-                <Image 
-                  source={{ uri: 'https://img.icons8.com/color/96/popcorn.png' }} 
-                  style={styles.promotionImage} 
+                <Image
+                  source={{ uri: 'https://img.icons8.com/color/96/popcorn.png' }}
+                  style={styles.promotionImage}
                   contentFit="contain"
                 />
                 <Text style={styles.promotionTitle} numberOfLines={1}>{promo.title}</Text>

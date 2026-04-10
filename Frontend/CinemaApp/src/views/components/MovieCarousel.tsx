@@ -27,11 +27,12 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
   }
 
   const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
+  const displayMovies = movies.slice(0, 3);
 
   return (
     <View>
       <Animated.FlatList
-        data={movies}
+        data={displayMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -56,10 +57,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
             extrapolate: 'clamp',
           });
 
-          let finalImageUrl = item.mediaUrl ? `${baseUrl}${item.mediaUrl}` : item.imageUrl;
-          if (item.mediaUrl && item.mediaUrl.startsWith('http')) {
-            finalImageUrl = item.mediaUrl;
-          }
+          let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
 
           return (
             <View style={styles.movieItemContainer}>
@@ -79,7 +77,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
         }}
       />
       <View style={styles.paginationContainer}>
-        {movies.slice(0, 5).map((_, index) => {
+        {displayMovies.map((_, index) => {
           const dotPosition = Animated.divide(scrollX, FULL_ITEM_WIDTH);
           const opacity = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],

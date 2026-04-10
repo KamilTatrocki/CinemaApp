@@ -35,7 +35,7 @@ const MoviesScreen = () => {
   return (
     <View style={styles.container}>
       <Text variant="headlineLarge" style={styles.header}>
-        Cinema Name
+        LUMIO
       </Text>
       <FlatList
         data={movies}

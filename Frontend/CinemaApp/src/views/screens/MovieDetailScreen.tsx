@@ -4,17 +4,26 @@ import { Image } from 'expo-image';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
 import { useAuth } from '../../context/AuthContext';
+import { useMovieDetailViewModel } from '../../viewmodels/useMovieDetailViewModel';
 
 const { width, height } = Dimensions.get('window');
 
 const TrailerVideo = ({ url }: { url: string }) => {
+  const isFocused = useIsFocused();
   const player = useVideoPlayer(url, player => {
     player.loop = true;
-    player.play();
   });
+
+  React.useEffect(() => {
+    if (isFocused) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isFocused, player]);
 
   return (
     <VideoView 
@@ -31,9 +40,13 @@ const MovieDetailScreen = () => {
   const route = useRoute();
   const navigation = useNavigation<any>();
   const { isAuthenticated } = useAuth();
-  const movie = (route.params as any)?.movie as Movie;
+  const initialMovie = (route.params as any)?.movie as Movie;
 
-  if (!movie) {
+  const { movie: movieDetails } = useMovieDetailViewModel(initialMovie?.id);
+
+  const displayMovie = movieDetails || initialMovie;
+
+  if (!initialMovie) {
     return (
       <View style={styles.center}>
         <Text>Movie not found</Text>
@@ -42,8 +55,8 @@ const MovieDetailScreen = () => {
   }
 
   const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-  let finalImageUrl = movie.imageUrl ? (movie.imageUrl.startsWith('http') ? movie.imageUrl : `${baseUrl}${movie.imageUrl}`) : '';
-  let finalMediaUrl = movie.mediaUrl ? (movie.mediaUrl.startsWith('http') ? movie.mediaUrl : `${baseUrl}${movie.mediaUrl}`) : '';
+  let finalImageUrl = initialMovie.imageUrl ? (initialMovie.imageUrl.startsWith('http') ? initialMovie.imageUrl : `${baseUrl}${initialMovie.imageUrl}`) : '';
+  let finalMediaUrl = displayMovie?.mediaUrl ? (displayMovie.mediaUrl.startsWith('http') ? displayMovie.mediaUrl : `${baseUrl}${displayMovie.mediaUrl}`) : '';
 
   return (
     <View style={styles.container}>
@@ -68,16 +81,15 @@ const MovieDetailScreen = () => {
             </TouchableOpacity>
 
             <View style={styles.titleContainer}>
-              <Text style={styles.titleText}>{movie.title}</Text>
-              <Text style={styles.subtitleText}>{movie.durationMinutes} min • Rating {movie.rating}/10</Text>
+              <Text style={styles.titleText}>{displayMovie.title}</Text>
+              <Text style={styles.subtitleText}>{displayMovie.durationMinutes} min • Rating {displayMovie.rating}/10</Text>
             </View>
           </View>
         </View>
 
         {/* Info Section */}
         <View style={styles.infoSection}>
-          <Text style={styles.yearText}>{movie.releaseYear}</Text>
-          <Text style={styles.directorText}>director: James Cameron</Text>
+          <Text style={styles.yearText}>{displayMovie.releaseYear}</Text>
         </View>
 
         {/* Trailer Section */}
@@ -99,9 +111,8 @@ const MovieDetailScreen = () => {
 
         {/* Description Section */}
         <View style={styles.descriptionSection}>
-          <Text style={styles.actorsText}>Main actor 1, Main Actor 2, Main Actor 3</Text>
           <Text style={styles.descriptionText}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+            {displayMovie.description || "No description available."}
           </Text>
         </View>
       </ScrollView>
@@ -111,7 +122,7 @@ const MovieDetailScreen = () => {
           style={styles.bookButton}
           onPress={() => {
             if (isAuthenticated) {
-              navigation.navigate('Screenings', { movieId: movie.id });
+              navigation.navigate('Screenings', { movieId: displayMovie.id });
             } else {
               navigation.navigate('MainTabs', { screen: 'Account' });
             }
