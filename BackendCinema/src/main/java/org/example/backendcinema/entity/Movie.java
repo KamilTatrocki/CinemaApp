@@ -33,6 +33,9 @@ public class Movie {
     @Column(precision = 3, scale = 1)
     private BigDecimal rating;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Column(name = "media_url")
     private String mediaUrl;
 

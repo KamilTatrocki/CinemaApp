@@ -1,18 +1,52 @@
 import React from 'react';
-import { View, StyleSheet, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
+import { useVideoPlayer, VideoView } from 'expo-video';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
+import { useAuth } from '../../context/AuthContext';
+import { useMovieDetailViewModel } from '../../viewmodels/useMovieDetailViewModel';
 
 const { width, height } = Dimensions.get('window');
 
+const TrailerVideo = ({ url }: { url: string }) => {
+  const isFocused = useIsFocused();
+  const player = useVideoPlayer(url, player => {
+    player.loop = true;
+  });
+
+  React.useEffect(() => {
+    if (isFocused) {
+      player.play();
+    } else {
+      player.pause();
+    }
+  }, [isFocused, player]);
+
+  return (
+    <VideoView 
+      style={{ width: '100%', height: '100%' }} 
+      player={player} 
+      allowsFullscreen 
+      allowsPictureInPicture 
+      contentFit="contain"
+    />
+  );
+};
+
 const MovieDetailScreen = () => {
   const route = useRoute();
-  const navigation = useNavigation();
-  const movie = (route.params as any)?.movie as Movie;
+  const navigation = useNavigation<any>();
+  const { isAuthenticated } = useAuth();
+  const initialMovie = (route.params as any)?.movie as Movie;
 
-  if (!movie) {
+  const { movie: movieDetails } = useMovieDetailViewModel(initialMovie?.id);
+
+  const displayMovie = movieDetails || initialMovie;
+
+  if (!initialMovie) {
     return (
       <View style={styles.center}>
         <Text>Movie not found</Text>
@@ -20,73 +54,84 @@ const MovieDetailScreen = () => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
-  let finalImageUrl = movie.mediaUrl ? `${baseUrl}${movie.mediaUrl}` : movie.imageUrl;
-  if (movie.mediaUrl && movie.mediaUrl.startsWith('http')) {
-      finalImageUrl = movie.mediaUrl;
-  }
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
+  let finalImageUrl = initialMovie.imageUrl ? (initialMovie.imageUrl.startsWith('http') ? initialMovie.imageUrl : `${baseUrl}${initialMovie.imageUrl}`) : '';
+  let finalMediaUrl = displayMovie?.mediaUrl ? (displayMovie.mediaUrl.startsWith('http') ? displayMovie.mediaUrl : `${baseUrl}${displayMovie.mediaUrl}`) : '';
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} bounces={false}>
-      {/* Top Banner section */}
-      <View style={styles.bannerContainer}>
-        {finalImageUrl ? (
-          <Image source={{ uri: finalImageUrl }} style={styles.bannerImage} />
-        ) : (
-           <View style={[styles.bannerImage, { backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
-             <MaterialCommunityIcons name="movie" size={64} color="#666" />
-           </View>
-        )}
-        
-        {/* Top Gradient / Overlay */}
-        <View style={styles.bannerOverlay}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
-          </TouchableOpacity>
-          
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>{movie.title}</Text>
-            <Text style={styles.subtitleText}>{movie.durationMinutes} min • Rating {movie.rating}/10</Text>
+    <View style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false} bounces={false} contentContainerStyle={{ paddingBottom: 100 }}>
+        {/* Top Banner section */}
+        <View style={styles.bannerContainer}>
+          {finalImageUrl ? (
+            <Image source={finalImageUrl} style={styles.bannerImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
+          ) : (
+            <View style={[styles.bannerImage, { backgroundColor: '#333', justifyContent: 'center', alignItems: 'center' }]}>
+              <MaterialCommunityIcons name="movie" size={64} color="#666" />
+            </View>
+          )}
+
+          {/* Top Gradient / Overlay */}
+          <View style={styles.bannerOverlay}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+            >
+              <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+            </TouchableOpacity>
+
+            <View style={styles.titleContainer}>
+              <Text style={styles.titleText}>{displayMovie.title}</Text>
+              <Text style={styles.subtitleText}>{displayMovie.durationMinutes} min • Rating {displayMovie.rating}/10</Text>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* Info Section */}
-      <View style={styles.infoSection}>
-        <Text style={styles.yearText}>{movie.releaseYear}</Text>
-        <Text style={styles.directorText}>director: James Cameron</Text>
-      </View>
-
-      {/* Trailer Section */}
-      <View style={styles.trailerSection}>
-        {finalImageUrl ? (
-          <Image source={{ uri: finalImageUrl }} style={styles.trailerImage} />
-        ) : (
-           <View style={[styles.trailerImage, { backgroundColor: '#444' }]} />
-        )}
-        <View style={styles.trailerOverlay}>
-          <Text style={styles.trailerTitle}>OFFICIAL</Text>
-          <Text style={styles.trailerSubtitle}>TRAILER</Text>
+        {/* Info Section */}
+        <View style={styles.infoSection}>
+          <Text style={styles.yearText}>{displayMovie.releaseYear}</Text>
         </View>
-      </View>
 
-      {/* Description Section */}
-      <View style={styles.descriptionSection}>
-        <Text style={styles.actorsText}>Main actor 1, Main Actor 2, Main Actor 3</Text>
-        <Text style={styles.descriptionText}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
-        </Text>
-        
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.bookButton}>
-            <Text style={styles.bookButtonText}>BOOK TICKETS NOW</Text>
-          </TouchableOpacity>
+        {/* Trailer Section */}
+        <View style={styles.trailerSection}>
+          {finalMediaUrl ? (
+            <TrailerVideo url={finalMediaUrl} />
+          ) : finalImageUrl ? (
+            <Image source={finalImageUrl} style={styles.trailerImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
+          ) : (
+            <View style={[styles.trailerImage, { backgroundColor: '#444' }]} />
+          )}
+          {!finalMediaUrl && (
+            <View style={styles.trailerOverlay}>
+              <Text style={styles.trailerTitle}>OFFICIAL</Text>
+              <Text style={styles.trailerSubtitle}>TRAILER</Text>
+            </View>
+          )}
         </View>
+
+        {/* Description Section */}
+        <View style={styles.descriptionSection}>
+          <Text style={styles.descriptionText}>
+            {displayMovie.description || "No description available."}
+          </Text>
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.bookButton}
+          onPress={() => {
+            if (isAuthenticated) {
+              navigation.navigate('Screenings', { movieId: displayMovie.id });
+            } else {
+              navigation.navigate('MainTabs', { screen: 'Account' });
+            }
+          }}
+        >
+          <Text style={styles.bookButtonText}>BOOK TICKETS NOW</Text>
+        </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -108,7 +153,6 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   bannerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -162,7 +206,6 @@ const styles = StyleSheet.create({
   trailerImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   trailerOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -201,7 +244,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   buttonContainer: {
-    alignItems: 'flex-end',
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
   },
   bookButton: {
     backgroundColor: '#0000FF',

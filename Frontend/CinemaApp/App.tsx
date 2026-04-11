@@ -6,6 +6,12 @@ import { NavigationContainer, NavigationIndependentTree } from '@react-navigatio
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './src/navigation/TabNavigator';
 import MovieDetailScreen from './src/views/screens/MovieDetailScreen';
+import ScreeningsScreen from './src/views/screens/ScreeningsScreen';
+import SeatSelectionScreen from './src/views/screens/SeatSelectionScreen';
+import TicketSelectionScreen from './src/views/screens/TicketSelectionScreen';
+import BookingReviewScreen from './src/views/screens/BookingReviewScreen';
+import PaymentScreen from './src/views/screens/PaymentScreen';
+import PaymentConfirmationScreen from './src/views/screens/PaymentConfirmationScreen';
 
 import { AuthProvider } from './src/context/AuthContext';
 
@@ -30,6 +36,12 @@ const App = () => {
                 <Stack.Navigator screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="MainTabs" component={TabNavigator} />
                   <Stack.Screen name="MovieDetail" component={MovieDetailScreen} />
+                  <Stack.Screen name="Screenings" component={ScreeningsScreen} />
+                  <Stack.Screen name="SeatSelection" component={SeatSelectionScreen} />
+                  <Stack.Screen name="TicketSelection" component={TicketSelectionScreen} />
+                  <Stack.Screen name="BookingReview" component={BookingReviewScreen} />
+                  <Stack.Screen name="Payment" component={PaymentScreen} />
+                  <Stack.Screen name="PaymentConfirmation" component={PaymentConfirmationScreen} />
                 </Stack.Navigator>
               </NavigationContainer>
             </NavigationIndependentTree>

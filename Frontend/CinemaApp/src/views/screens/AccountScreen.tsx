@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, ActivityIndicator, Button, Avatar } from 'react-native-paper';
+import { Text, ActivityIndicator, Button } from 'react-native-paper';
 import { useUserViewModel } from '../../viewmodels/useUserViewModel';
 import { useAuthViewModel } from '../../viewmodels/useAuthViewModel';
 import { Ticket } from '../../models/Ticket';
 import LoginView from '../components/Auth/LoginView';
 import RegisterView from '../components/Auth/RegisterView';
+import TicketItem from '../components/TicketItem';
 
 const AccountScreen = () => {
   const { tickets, isLoading: isTicketsLoading } = useUserViewModel();
@@ -21,30 +22,6 @@ const AccountScreen = () => {
   } = useAuthViewModel();
 
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pl-PL') + ' ' + date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-  };
-
-  const renderTicket = ({ item }: { item: Ticket }) => (
-    <View style={styles.ticketCard}>
-      <View style={styles.ticketInfo}>
-        <Text variant="headlineSmall" style={styles.cinemaName}>
-          {item.cinemaName}
-        </Text>
-        <Text variant="bodyMedium" style={styles.screeningTime}>
-          {formatDate(item.screeningTime)}
-        </Text>
-      </View>
-      <View style={styles.qrContainer}>
-        <Image
-          source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${item.qrCodeToken}` }}
-          style={styles.qrCode}
-        />
-      </View>
-    </View>
-  );
 
   if (!isAuthenticated) {
     return (
@@ -90,12 +67,12 @@ const AccountScreen = () => {
 
       {isTicketsLoading ? (
         <View style={styles.center}>
-          <ActivityIndicator animating={true} size="large" color="#6200ee" />
+          <ActivityIndicator animating={true} size="large" color="#0000FF" />
         </View>
       ) : (
         <FlatList
           data={tickets}
-          renderItem={renderTicket}
+          renderItem={({ item }) => <TicketItem ticket={item} />}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
@@ -109,7 +86,7 @@ const AccountScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#E8EDF8',
     paddingHorizontal: 20,
   },
   authContainer: {
@@ -142,50 +119,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   listContent: {
-    paddingBottom: 20,
-  },
-  ticketCard: {
-    backgroundColor: '#9DB4FF',
-    borderRadius: 5,
-    flexDirection: 'row',
-    padding: 20,
-    marginBottom: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  ticketInfo: {
-    flex: 1,
-  },
-  cinemaName: {
-    fontWeight: 'bold',
-    color: '#000',
-    fontSize: 28,
-  },
-  screeningTime: {
-    color: '#333',
-    marginTop: 4,
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  qrContainer: {
-    backgroundColor: '#FFF',
-    padding: 4,
-    borderRadius: 4,
-  },
-  qrCode: {
-    width: 80,
-    height: 80,
+    paddingBottom: 40,
   },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#EDF1F9',
   },
   emptyText: {
     textAlign: 'center',

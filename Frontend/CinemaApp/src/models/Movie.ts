@@ -5,6 +5,7 @@ export interface Movie {
   releaseYear: number;
   rating: number;
   status: string;
+  description?: string;
   imageUrl?: string; // Optional for future use
   mediaUrl?: string; // URL for the movie image from backend
 }

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, Animated, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Animated, Dimensions, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
@@ -25,12 +26,13 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
+  const displayMovies = movies.slice(0, 3);
 
   return (
     <View>
       <Animated.FlatList
-        data={movies}
+        data={displayMovies}
         keyExtractor={(item) => item.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -55,17 +57,14 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
             extrapolate: 'clamp',
           });
 
-          let finalImageUrl = item.mediaUrl ? `${baseUrl}${item.mediaUrl}` : item.imageUrl;
-          if (item.mediaUrl && item.mediaUrl.startsWith('http')) {
-            finalImageUrl = item.mediaUrl;
-          }
+          let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
 
           return (
             <View style={styles.movieItemContainer}>
               <TouchableOpacity onPress={() => navigation.navigate('MovieDetail', { movie: item })} activeOpacity={0.9}>
                 <Animated.View style={[styles.movieImageContainer, { transform: [{ scale }] }]}>
                   {finalImageUrl ? (
-                    <Image source={{ uri: finalImageUrl }} style={styles.movieImage} />
+                    <Image source={finalImageUrl} style={styles.movieImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
                   ) : (
                     <View style={styles.noImageContainer}>
                       <Text style={{ color: '#aaa' }}>No Image</Text>
@@ -78,7 +77,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
         }}
       />
       <View style={styles.paginationContainer}>
-        {movies.slice(0, 5).map((_, index) => {
+        {displayMovies.map((_, index) => {
           const dotPosition = Animated.divide(scrollX, FULL_ITEM_WIDTH);
           const opacity = dotPosition.interpolate({
             inputRange: [index - 1, index, index + 1],
@@ -117,7 +116,6 @@ const styles = StyleSheet.create({
   movieImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   noImageContainer: {
     flex: 1,

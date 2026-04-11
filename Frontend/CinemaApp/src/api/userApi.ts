@@ -1,7 +1,7 @@
 import { User } from '../models/User';
 import { Ticket } from '../models/Ticket';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
 
 export const fetchUserProfile = async (token: string): Promise<User> => {
   const response = await fetch(`${API_URL}/users/me`, {

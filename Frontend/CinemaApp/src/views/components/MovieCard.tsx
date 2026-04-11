@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { Image } from 'expo-image';
 import { Text, ActivityIndicator, Card, Surface } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,12 +17,8 @@ const MovieCard = ({ item }: MovieCardProps) => {
   const [imageError, setImageError] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8080';
-  let finalImageUrl = item.mediaUrl ? `${baseUrl}${item.mediaUrl}` : item.imageUrl;
-  
-  if (item.mediaUrl && item.mediaUrl.startsWith('http')) {
-      finalImageUrl = item.mediaUrl;
-  }
+  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
+  let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
 
   const navigation = useNavigation<any>();
 
@@ -35,9 +32,12 @@ const MovieCard = ({ item }: MovieCardProps) => {
                 <ActivityIndicator color="#AAA" />
               </View>
             )}
-            <Image 
-              source={{ uri: finalImageUrl }} 
-              style={styles.image} 
+            <Image
+              source={finalImageUrl}
+              style={styles.image}
+              contentFit="cover"
+              transition={200}
+              cachePolicy="memory-disk"
               onError={() => {
                 setImageError(true);
                 setIsLoading(false);
@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   noImageContainer: {
     flex: 1,

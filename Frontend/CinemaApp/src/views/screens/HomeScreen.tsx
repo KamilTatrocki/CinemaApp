@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { Image } from 'expo-image';
 import { Text, ActivityIndicator, Button } from 'react-native-paper';
 import { useHomeViewModel } from '../../viewmodels/useHomeViewModel';
 import { useNavigation } from '@react-navigation/native';
@@ -36,13 +37,12 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Text variant="headlineLarge" style={styles.header}>
-        Cinema Name
+        LUMIO
       </Text>
       <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        
         <View style={styles.headerRight}>
-          <Button 
-            mode="contained" 
+          <Button
+            mode="contained"
             onPress={() => navigation.navigate('Movies')}
             style={styles.viewMoreButton}
             labelStyle={styles.viewMoreButtonText}
@@ -55,19 +55,19 @@ const HomeScreen = () => {
         <MovieCarousel movies={movies} />
 
         <Text style={styles.promotionsTitle}>promotions</Text>
-        
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.promotionsList}
         >
           {promotions && promotions.length > 0 ? (
             promotions.map(promo => (
               <View key={promo.id} style={styles.promotionCard}>
-                <Image 
-                  source={{ uri: 'https://img.icons8.com/color/96/popcorn.png' }} 
-                  style={styles.promotionImage} 
-                  resizeMode="contain"
+                <Image
+                  source={{ uri: 'https://img.icons8.com/color/96/popcorn.png' }}
+                  style={styles.promotionImage}
+                  contentFit="contain"
                 />
                 <Text style={styles.promotionTitle} numberOfLines={1}>{promo.title}</Text>
               </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 20,
+    paddingBottom: 0,
     fontWeight: '700',
     color: '#000',
   },
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
   headerRight: {
     alignItems: 'flex-end',
     marginHorizontal: 16,
-    marginBottom: 20,
-    marginTop: 10,
+    marginBottom: 10,
+    marginTop: 0,
   },
   viewMoreButton: {
     borderRadius: 8,
