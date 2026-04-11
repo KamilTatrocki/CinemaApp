@@ -8,7 +8,7 @@ The repository is organized into three main directories:
 
 ### 1. `BackendCinema` (Backend API)
 A robust RESTful API built with Java 21 and Spring Boot 3. 
-- **Tech Stack**: Spring Boot (Web, Data JPA, Security, Validation), PostgreSQL, JWT (`jjwt`) for Auth, MapStruct for DTO mapping, and Lombok.
+- **Tech Stack**: Spring Boot (Web, Data JPA, Security, Validation), PostgreSQL, JWT for Auth, MapStruct for DTO mapping, and Lombok.
 - **Database**: PostgreSQL configuration is provided via Docker Compose (`compose.yaml`).
 - **Core Entities**: Movies, Cinemas, Halls, Seats, Screenings, Users, Ticket Types, Reservations, Tickets, and Promotions.
 - **Key Features**: 
@@ -27,14 +27,8 @@ A cross-platform mobile application developed with React Native and Expo, utiliz
 - **Features**: Consumes the REST API to provide user authentication, movie browsing, dynamic seat selection for screenings, and reservation management.
 - **Project Structure**: Follows Expo Router file-based routing with app directories containing screens and configurations. API integration details and expected endpoints are documented in `Frontend/backend_structure.txt`.
 
-### 3. `DesignAndPlans` (Documentation & Design)
-Contains planning materials, architecture descriptions, and UI mockups.
-- **`FIGMA.png`**: UI/UX design mockups.
-- **`baza schema.txt`**: Database schema representing exact tables (Movies, Cinemas, Halls, Seats, etc.) and their relationships.
-- **`endpoints.txt`**: Document detailing initially planned API structures.
-- **`Opis Projektu`** (`.pdf` / `.docx`): Detailed functional breakdown and project description in Polish.
 
----
+
 
 ## **Getting Started**
 
@@ -69,3 +63,4 @@ The API is protected using JSON Web Tokens (JWT). Roles include standard Users a
 - `/movies/{movieId}/screenings` and `/screenings/{id}/seats` for screening info
 - `/bookings` for handling ticket reservations and payments
 - `/users/me` for user profile and ticket history management
+- `uploads/{filename}` for serving uploaded files
