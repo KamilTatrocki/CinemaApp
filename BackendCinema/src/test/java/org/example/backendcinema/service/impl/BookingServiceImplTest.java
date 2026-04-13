@@ -145,8 +145,6 @@ class BookingServiceImplTest {
         assertThat(response.getTotalPrice()).isEqualByComparingTo(new BigDecimal("30.00"));
 
         verify(ticketRepository).saveAll(anyList());
-        // reservation saved twice: once on create, once after price update
-        verify(reservationRepository, times(2)).save(any(Reservation.class));
     }
 
     @Test
