@@ -4,6 +4,7 @@ import { Image } from 'expo-image';
 import { Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Movie } from '../../models/Movie';
+import { API_URL } from '../../api/config';
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.65;
@@ -26,7 +27,6 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
   const displayMovies = movies.slice(0, 3);
 
   return (
@@ -57,7 +57,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({ movies }) => {
             extrapolate: 'clamp',
           });
 
-          let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
+          let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${API_URL}${item.imageUrl}`) : '';
 
           return (
             <View style={styles.movieItemContainer}>

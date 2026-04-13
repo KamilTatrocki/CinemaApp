@@ -5,15 +5,14 @@ import {
   BookingRequest,
   ReservationResponse,
 } from '../models/BookingModels';
-
-const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
+import { API_URL } from './config';
 
 export const fetchScreenings = async (
   movieId: number,
   cinemaId?: number
 ): Promise<ScreeningResponse[]> => {
   try {
-    let url = `${baseUrl}/movies/${movieId}/screenings`;
+    let url = `${API_URL}/movies/${movieId}/screenings`;
     if (cinemaId) {
       url += `?cinemaId=${cinemaId}`;
     }
@@ -30,7 +29,7 @@ export const fetchScreenings = async (
 
 export const fetchSeats = async (screeningId: number): Promise<SeatStatusResponse[]> => {
   try {
-    const url = `${baseUrl}/screenings/${screeningId}/seats`;
+    const url = `${API_URL}/screenings/${screeningId}/seats`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch seats: ${response.statusText}`);
@@ -44,7 +43,7 @@ export const fetchSeats = async (screeningId: number): Promise<SeatStatusRespons
 
 export const fetchTicketTypes = async (): Promise<TicketTypeResponse[]> => {
   try {
-    const url = `${baseUrl}/ticket-types`;
+    const url = `${API_URL}/ticket-types`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Failed to fetch ticket types: ${response.statusText}`);
@@ -61,7 +60,7 @@ export const createBooking = async (
   token: string
 ): Promise<ReservationResponse> => {
   try {
-    const url = `${baseUrl}/bookings`;
+    const url = `${API_URL}/bookings`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -88,7 +87,7 @@ export const payBooking = async (
   token: string
 ): Promise<ReservationResponse> => {
   try {
-    const url = `${baseUrl}/bookings/${reservationId}/pay`;
+    const url = `${API_URL}/bookings/${reservationId}/pay`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {

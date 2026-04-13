@@ -5,6 +5,7 @@ import { Text, ActivityIndicator, Card, Surface } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Movie } from '../../models/Movie';
+import { API_URL } from '../../api/config';
 
 const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = (width - 48) / 2; // Subtracting padding
@@ -17,8 +18,7 @@ const MovieCard = ({ item }: MovieCardProps) => {
   const [imageError, setImageError] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-  let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${baseUrl}${item.imageUrl}`) : '';
+  let finalImageUrl = item.imageUrl ? (item.imageUrl.startsWith('http') ? item.imageUrl : `${API_URL}${item.imageUrl}`) : '';
 
   const navigation = useNavigation<any>();
 

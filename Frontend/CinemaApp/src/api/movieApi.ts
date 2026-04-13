@@ -1,9 +1,9 @@
 import { Movie } from '../models/Movie';
+import { API_URL } from './config';
 
 export const fetchMovies = async (status?: string): Promise<Movie[]> => {
   try {
-    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-    const url = status ? `${baseUrl}/movies?status=${status}` : `${baseUrl}/movies`;
+    const url = status ? `${API_URL}/movies?status=${status}` : `${API_URL}/movies`;
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -20,8 +20,7 @@ export const fetchMovies = async (status?: string): Promise<Movie[]> => {
 
 export const fetchMovieById = async (id: number): Promise<Movie> => {
   try {
-    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-    const response = await fetch(`${baseUrl}/movies/${id}`);
+    const response = await fetch(`${API_URL}/movies/${id}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch movie: ${response.statusText}`);

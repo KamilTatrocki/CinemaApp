@@ -1,9 +1,9 @@
 import { Promotion } from '../models/Promotion';
+import { API_URL } from './config';
 
 export const fetchPromotions = async (): Promise<Promotion[]> => {
   try {
-    const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-    const url = `${baseUrl}/promotions`;
+    const url = `${API_URL}/promotions`;
     const response = await fetch(url);
 
     if (!response.ok) {

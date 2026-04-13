@@ -8,6 +8,7 @@ import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native'
 import { Movie } from '../../models/Movie';
 import { useAuth } from '../../context/AuthContext';
 import { useMovieDetailViewModel } from '../../viewmodels/useMovieDetailViewModel';
+import { API_URL } from '../../api/config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -54,9 +55,8 @@ const MovieDetailScreen = () => {
     );
   }
 
-  const baseUrl = process.env.EXPO_PUBLIC_API_URL || 'http://172.20.10.2:8080';
-  let finalImageUrl = initialMovie.imageUrl ? (initialMovie.imageUrl.startsWith('http') ? initialMovie.imageUrl : `${baseUrl}${initialMovie.imageUrl}`) : '';
-  let finalMediaUrl = displayMovie?.mediaUrl ? (displayMovie.mediaUrl.startsWith('http') ? displayMovie.mediaUrl : `${baseUrl}${displayMovie.mediaUrl}`) : '';
+  let finalImageUrl = initialMovie.imageUrl ? (initialMovie.imageUrl.startsWith('http') ? initialMovie.imageUrl : `${API_URL}${initialMovie.imageUrl}`) : '';
+  let finalMediaUrl = displayMovie?.mediaUrl ? (displayMovie.mediaUrl.startsWith('http') ? displayMovie.mediaUrl : `${API_URL}${displayMovie.mediaUrl}`) : '';
 
   return (
     <View style={styles.container}>
