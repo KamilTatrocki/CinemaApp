@@ -24,7 +24,7 @@ const RegisterView: React.FC<RegisterViewProps> = ({
 
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>Register</Title>
+      <Text variant="titleLarge" style={styles.title}>Register</Text>
       <Text style={styles.subtitle}>Create an account to manage your tickets.</Text>
       
       {error && <Text style={styles.errorText}>{error}</Text>}

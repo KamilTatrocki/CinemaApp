@@ -15,7 +15,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, onSwitchToRegister, isLo
 
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>Login</Title>
+      <Text variant="titleLarge" style={styles.title}>Login</Text>
       <Text style={styles.subtitle}>Welcome back! Please login to your account.</Text>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
