@@ -17,7 +17,7 @@ export const useScreeningsViewModel = () => {
     enabled: !!movieId,
   });
 
-  // Group by date and then by cinema
+  
   const screeningsByDate = (screenings || []).reduce((acc, screening) => {
     const date = new Date(screening.startTime).toLocaleDateString();
     if (!acc[date]) {

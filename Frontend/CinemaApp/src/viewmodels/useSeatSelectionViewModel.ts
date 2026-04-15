@@ -24,7 +24,7 @@ export const useSeatSelectionViewModel = () => {
     );
   };
 
-  // Group seats by row
+  
   const rows = (seats || []).reduce((acc: Record<string, any[]>, seat: any) => {
     if (!acc[seat.rowLabel]) {
       acc[seat.rowLabel] = [];
@@ -33,7 +33,7 @@ export const useSeatSelectionViewModel = () => {
     return acc;
   }, {});
 
-  // Sort rows alphabetically A-Z
+  
   const sortedRowKeys = Object.keys(rows).sort();
 
   const onProceedToTickets = () =>

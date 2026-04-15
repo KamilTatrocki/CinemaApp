@@ -20,7 +20,6 @@ public class MediaController {
     public ResponseEntity<Resource> serveMedia(@PathVariable String filename) throws IOException {
         File file = new File(uploadPath + "/" + filename);
 
-        // LOGI - sprawdź je w konsoli Dockera!
         System.out.println("DEBUG: Żądanie pliku: " + filename);
 
         if (!file.exists()) {
@@ -31,9 +30,7 @@ public class MediaController {
         if (contentType == null) {
             contentType = filename.endsWith(".mov") ? "video/quicktime" : "video/mp4";
         }
-
-        // Używamy FileSystemResource - Spring 6 automatycznie obsłuży nagłówki 'Range'
-        // jeśli klient (iPhone) o nie zapyta.
+        
         Resource resource = new FileSystemResource(file);
 
         return ResponseEntity.ok()
