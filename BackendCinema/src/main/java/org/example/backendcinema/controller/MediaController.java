@@ -30,7 +30,7 @@ public class MediaController {
         if (contentType == null) {
             contentType = filename.endsWith(".mov") ? "video/quicktime" : "video/mp4";
         }
-        
+
         Resource resource = new FileSystemResource(file);
 
         return ResponseEntity.ok()
