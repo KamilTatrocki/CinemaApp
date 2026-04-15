@@ -1,3 +1,5 @@
+docker exec -it backendcinema-postgres-1 psql -U myuser -d mydatabase
+
 INSERT INTO CINEMAS (id, address, city, name) VALUES
 (3, 'ul. Długa 5', 'Gdańsk', 'Amber Cinema'),
 (4, 'ul. Świętokrzyska 10', 'Warszawa', 'Skyline Cinema'),
