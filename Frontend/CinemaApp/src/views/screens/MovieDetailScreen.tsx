@@ -1,29 +1,13 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
-import { VideoView } from 'expo-video';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {
-  useMovieDetailViewModel,
-  useTrailerPlayerViewModel,
-} from '../../viewmodels/useMovieDetailViewModel';
+import { useMovieDetailViewModel } from '../../viewmodels/useMovieDetailViewModel';
+import { TrailerVideo } from '../components/TrailerVideo';
 
 const { width, height } = Dimensions.get('window');
 
-const TrailerVideo = ({ url }: { url: string }) => {
-  const { player } = useTrailerPlayerViewModel(url);
-
-  return (
-    <VideoView
-      style={{ width: '100%', height: '100%' }}
-      player={player}
-      allowsFullscreen
-      allowsPictureInPicture
-      contentFit="contain"
-    />
-  );
-};
 
 const MovieDetailScreen = () => {
   const {

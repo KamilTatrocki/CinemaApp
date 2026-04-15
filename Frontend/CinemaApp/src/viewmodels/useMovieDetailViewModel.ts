@@ -1,7 +1,5 @@
-import React from 'react';
-import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
-import { useVideoPlayer } from 'expo-video';
 import { fetchMovieById } from '../api/movieApi';
 import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../api/config';
@@ -56,25 +54,4 @@ export const useMovieDetailViewModel = () => {
     onBookPress,
     onBackPress,
   };
-};
-
-
-
-
-export const useTrailerPlayerViewModel = (url: string) => {
-  const isFocused = useIsFocused();
-
-  const player = useVideoPlayer(url, (p) => {
-    p.loop = true;
-  });
-
-  React.useEffect(() => {
-    if (isFocused) {
-      player.play();
-    } else {
-      player.pause();
-    }
-  }, [isFocused, player]);
-
-  return { player };
 };
