@@ -61,7 +61,7 @@ const MovieDetailScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} bounces={false} contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Top Banner section */}
+   
         <View style={styles.bannerContainer}>
           {finalImageUrl ? (
             <Image source={finalImageUrl} style={styles.bannerImage} contentFit="cover" transition={200} cachePolicy="memory-disk" />
@@ -71,7 +71,7 @@ const MovieDetailScreen = () => {
             </View>
           )}
 
-          {/* Top Gradient / Overlay */}
+    
           <View style={styles.bannerOverlay}>
             <TouchableOpacity
               style={styles.backButton}
@@ -87,12 +87,12 @@ const MovieDetailScreen = () => {
           </View>
         </View>
 
-        {/* Info Section */}
+      
         <View style={styles.infoSection}>
           <Text style={styles.yearText}>{displayMovie.releaseYear}</Text>
         </View>
 
-        {/* Trailer Section */}
+        
         <View style={styles.trailerSection}>
           {finalMediaUrl ? (
             <TrailerVideo url={finalMediaUrl} />
@@ -109,7 +109,6 @@ const MovieDetailScreen = () => {
           )}
         </View>
 
-        {/* Description Section */}
         <View style={styles.descriptionSection}>
           <Text style={styles.descriptionText}>
             {displayMovie.description || "No description available."}
