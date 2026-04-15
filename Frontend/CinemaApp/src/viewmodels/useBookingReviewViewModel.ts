@@ -1,29 +1,36 @@
 import { useState } from 'react';
+import { Alert } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { createBooking } from '../api/bookingApi';
 import { useAuth } from '../context/AuthContext';
 import { BookingRequest } from '../models/BookingModels';
 
 export const useBookingReviewViewModel = () => {
+  const route = useRoute();
+  const navigation = useNavigation<any>();
   const { token, isAuthenticated } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleBooking = async (screeningId: number, tickets: any[], onSuccess: (reservation: any) => void, onError: (msg: string) => void) => {
+  const { screeningId, tickets } = route.params as { screeningId: number; tickets: any[] };
+
+  const onBackPress = () => navigation.goBack();
+
+  const onBookPress = async () => {
     if (!isAuthenticated || !token) {
-      onError('You must be logged in to create a reservation. Please log in from the Profile tab and try again.');
+      Alert.alert(
+        'Booking Error',
+        'You must be logged in to create a reservation. Please log in from the Profile tab and try again.'
+      );
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const request: BookingRequest = {
-        screeningId,
-        tickets,
-      };
-      
+      const request: BookingRequest = { screeningId, tickets };
       const reservation = await createBooking(request, token);
-      onSuccess(reservation);
+      navigation.navigate('Payment', { reservation });
     } catch (err: any) {
-      onError(err.message || 'There was an issue creating your reservation.');
+      Alert.alert('Booking Error', err.message || 'There was an issue creating your reservation.');
     } finally {
       setIsSubmitting(false);
     }
@@ -31,6 +38,8 @@ export const useBookingReviewViewModel = () => {
 
   return {
     isSubmitting,
-    handleBooking,
+    tickets,
+    onBookPress,
+    onBackPress,
   };
 };

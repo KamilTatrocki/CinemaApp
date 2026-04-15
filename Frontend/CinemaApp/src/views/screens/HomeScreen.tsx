@@ -3,19 +3,10 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import { Text, ActivityIndicator, Button } from 'react-native-paper';
 import { useHomeViewModel } from '../../viewmodels/useHomeViewModel';
-import { useNavigation } from '@react-navigation/native';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import MovieCarousel from '../components/MovieCarousel';
 
-type TabParamList = {
-  Home: undefined;
-  Movies: undefined;
-  Account: undefined;
-};
-
 const HomeScreen = () => {
-  const { movies, promotions, isLoading, isError, error } = useHomeViewModel();
-  const navigation = useNavigation<BottomTabNavigationProp<TabParamList>>();
+  const { movies, promotions, isLoading, isError, error, onViewMoreMovies } = useHomeViewModel();
 
   if (isLoading) {
     return (
@@ -43,7 +34,7 @@ const HomeScreen = () => {
         <View style={styles.headerRight}>
           <Button
             mode="contained"
-            onPress={() => navigation.navigate('Movies')}
+            onPress={onViewMoreMovies}
             style={styles.viewMoreButton}
             labelStyle={styles.viewMoreButtonText}
             buttonColor="#0000FF"

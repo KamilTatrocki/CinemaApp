@@ -1,15 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text, List } from 'react-native-paper';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useScreeningsViewModel } from '../../viewmodels/useScreeningsViewModel';
 
 const ScreeningsScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const movieId = (route.params as any)?.movieId;
-  
   const {
     isLoading,
     isError,
@@ -17,8 +12,10 @@ const ScreeningsScreen = () => {
     dates,
     activeDate,
     activeScreeningsByCinema,
-    setSelectedDate
-  } = useScreeningsViewModel(movieId);
+    setSelectedDate,
+    onSelectScreening,
+    onBackPress,
+  } = useScreeningsViewModel();
 
   if (isLoading) {
     return (
@@ -39,7 +36,7 @@ const ScreeningsScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Select Screening</Text>
@@ -83,7 +80,7 @@ const ScreeningsScreen = () => {
                       <TouchableOpacity
                         key={screening.id}
                         style={styles.timeBadge}
-                        onPress={() => navigation.navigate('SeatSelection', { screeningId: screening.id })}
+                        onPress={() => onSelectScreening(screening.id)}
                       >
                         <Text style={styles.timeBadgeText}>{time}</Text>
                         <Text style={styles.hallBadgeText}>{screening.hallName}</Text>

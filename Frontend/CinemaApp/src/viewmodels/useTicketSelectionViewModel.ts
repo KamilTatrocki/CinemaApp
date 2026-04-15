@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTicketTypes } from '../api/bookingApi';
 
-export const useTicketSelectionViewModel = (selectedSeats: number[]) => {
+export const useTicketSelectionViewModel = () => {
+  const route = useRoute();
+  const navigation = useNavigation<any>();
+  const { screeningId, selectedSeats } = route.params as { screeningId: number; selectedSeats: number[] };
+
   const { data: ticketTypes, isLoading, isError } = useQuery({
     queryKey: ['ticketTypes'],
     queryFn: fetchTicketTypes,
@@ -11,7 +16,7 @@ export const useTicketSelectionViewModel = (selectedSeats: number[]) => {
   const [ticketAssignments, setTicketAssignments] = useState<Record<number, number>>({});
 
   useEffect(() => {
-    // default all seats to the first ticket type
+
     if (ticketTypes && ticketTypes.length > 0 && selectedSeats && selectedSeats.length > 0) {
       if (Object.keys(ticketAssignments).length === 0) {
         const initialAssignments: Record<number, number> = {};
@@ -27,11 +32,24 @@ export const useTicketSelectionViewModel = (selectedSeats: number[]) => {
     setTicketAssignments(prev => ({ ...prev, [seatId]: typeId }));
   };
 
+  const onProceedToReview = () => {
+    const tickets = selectedSeats.map((seatId: number) => ({
+      seatId,
+      ticketTypeId: ticketAssignments[seatId],
+    }));
+    navigation.navigate('BookingReview', { screeningId, tickets });
+  };
+
+  const onBackPress = () => navigation.goBack();
+
   return {
     isLoading,
     isError,
     ticketTypes,
+    selectedSeats,
     ticketAssignments,
     setTicketTypeForSeat,
+    onProceedToReview,
+    onBackPress,
   };
 };

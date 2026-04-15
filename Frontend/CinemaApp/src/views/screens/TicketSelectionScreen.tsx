@@ -1,22 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTicketSelectionViewModel } from '../../viewmodels/useTicketSelectionViewModel';
 
 const TicketSelectionScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const { screeningId, selectedSeats } = route.params as any;
-
   const {
     isLoading,
     isError,
     ticketTypes,
+    selectedSeats,
     ticketAssignments,
     setTicketTypeForSeat,
-  } = useTicketSelectionViewModel(selectedSeats);
+    onProceedToReview,
+    onBackPress,
+  } = useTicketSelectionViewModel();
 
   if (isLoading) {
     return (
@@ -34,22 +32,10 @@ const TicketSelectionScreen = () => {
     );
   }
 
-  const proceedToReview = () => {
-    const tickets = selectedSeats.map((seatId: number) => ({
-      seatId,
-      ticketTypeId: ticketAssignments[seatId]
-    }));
-    
-    navigation.navigate('BookingReview', { 
-      screeningId, 
-      tickets 
-    });
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Select Ticket Types</Text>
@@ -88,7 +74,7 @@ const TicketSelectionScreen = () => {
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.nextButton} onPress={proceedToReview}>
+        <TouchableOpacity style={styles.nextButton} onPress={onProceedToReview}>
           <Text style={styles.nextButtonText}>REVIEW BOOKING</Text>
         </TouchableOpacity>
       </View>

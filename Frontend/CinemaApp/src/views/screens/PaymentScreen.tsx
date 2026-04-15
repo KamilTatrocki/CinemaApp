@@ -1,39 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { usePaymentViewModel } from '../../viewmodels/usePaymentViewModel';
 
 const PaymentScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation();
-  const { reservation } = route.params as any;
-  
-  const { isProcessing, handlePayment } = usePaymentViewModel();
-
-  const onPayPress = () => {
-    handlePayment(
-      reservation.id,
-      (confirmedReservation) => {
-        navigation.reset({
-          index: 0,
-          routes: [
-            { name: 'MainTabs' as never },
-            { name: 'PaymentConfirmation' as never, params: { reservation: confirmedReservation } as never }
-          ],
-        });
-      },
-      () => Alert.alert('Payment Error', 'Payment failed. Please try again.')
-    );
-  };
-
-  const formattedPrice = reservation.totalPrice ? `$${reservation.totalPrice.toFixed(2)}` : '$0.00';
+  const {
+    isProcessing,
+    reservation,
+    formattedPrice,
+    formattedScreeningTime,
+    onPayPress,
+    onBackPress,
+  } = usePaymentViewModel();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Checkout</Text>

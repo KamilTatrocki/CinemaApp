@@ -1,62 +1,46 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
-import { useVideoPlayer, VideoView } from 'expo-video';
+import { VideoView } from 'expo-video';
 import { Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
-import { Movie } from '../../models/Movie';
-import { useAuth } from '../../context/AuthContext';
-import { useMovieDetailViewModel } from '../../viewmodels/useMovieDetailViewModel';
-import { API_URL } from '../../api/config';
+import {
+  useMovieDetailViewModel,
+  useTrailerPlayerViewModel,
+} from '../../viewmodels/useMovieDetailViewModel';
 
 const { width, height } = Dimensions.get('window');
 
 const TrailerVideo = ({ url }: { url: string }) => {
-  const isFocused = useIsFocused();
-  const player = useVideoPlayer(url, player => {
-    player.loop = true;
-  });
-
-  React.useEffect(() => {
-    if (isFocused) {
-      player.play();
-    } else {
-      player.pause();
-    }
-  }, [isFocused, player]);
+  const { player } = useTrailerPlayerViewModel(url);
 
   return (
-    <VideoView 
-      style={{ width: '100%', height: '100%' }} 
-      player={player} 
-      allowsFullscreen 
-      allowsPictureInPicture 
+    <VideoView
+      style={{ width: '100%', height: '100%' }}
+      player={player}
+      allowsFullscreen
+      allowsPictureInPicture
       contentFit="contain"
     />
   );
 };
 
 const MovieDetailScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const { isAuthenticated } = useAuth();
-  const initialMovie = (route.params as any)?.movie as Movie;
+  const {
+    displayMovie,
+    imageUrl: finalImageUrl,
+    mediaUrl: finalMediaUrl,
+    onBookPress,
+    onBackPress,
+  } = useMovieDetailViewModel();
 
-  const { movie: movieDetails } = useMovieDetailViewModel(initialMovie?.id);
-
-  const displayMovie = movieDetails || initialMovie;
-
-  if (!initialMovie) {
+  if (!displayMovie) {
     return (
       <View style={styles.center}>
         <Text>Movie not found</Text>
       </View>
     );
   }
-
-  let finalImageUrl = initialMovie.imageUrl ? (initialMovie.imageUrl.startsWith('http') ? initialMovie.imageUrl : `${API_URL}${initialMovie.imageUrl}`) : '';
-  let finalMediaUrl = displayMovie?.mediaUrl ? (displayMovie.mediaUrl.startsWith('http') ? displayMovie.mediaUrl : `${API_URL}${displayMovie.mediaUrl}`) : '';
 
   return (
     <View style={styles.container}>
@@ -75,7 +59,7 @@ const MovieDetailScreen = () => {
           <View style={styles.bannerOverlay}>
             <TouchableOpacity
               style={styles.backButton}
-              onPress={() => navigation.goBack()}
+              onPress={onBackPress}
             >
               <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
             </TouchableOpacity>
@@ -119,13 +103,7 @@ const MovieDetailScreen = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.bookButton}
-          onPress={() => {
-            if (isAuthenticated) {
-              navigation.navigate('Screenings', { movieId: displayMovie.id });
-            } else {
-              navigation.navigate('MainTabs', { screen: 'Account' });
-            }
-          }}
+          onPress={onBookPress}
         >
           <Text style={styles.bookButtonText}>BOOK TICKETS NOW</Text>
         </TouchableOpacity>

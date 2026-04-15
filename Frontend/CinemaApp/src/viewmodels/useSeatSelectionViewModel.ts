@@ -1,8 +1,13 @@
 import { useState } from 'react';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchSeats } from '../api/bookingApi';
 
-export const useSeatSelectionViewModel = (screeningId: number) => {
+export const useSeatSelectionViewModel = () => {
+  const route = useRoute();
+  const navigation = useNavigation<any>();
+  const screeningId = (route.params as any)?.screeningId as number;
+
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
 
   const { data: seats, isLoading, isError } = useQuery({
@@ -12,8 +17,8 @@ export const useSeatSelectionViewModel = (screeningId: number) => {
   });
 
   const toggleSeat = (seatId: number) => {
-    setSelectedSeats(prev => 
-      prev.includes(seatId) 
+    setSelectedSeats(prev =>
+      prev.includes(seatId)
         ? prev.filter(id => id !== seatId)
         : [...prev, seatId]
     );
@@ -28,8 +33,13 @@ export const useSeatSelectionViewModel = (screeningId: number) => {
     return acc;
   }, {});
 
-  // Sort rows Alphabetically A-Z and seats numerically
+  // Sort rows alphabetically A-Z
   const sortedRowKeys = Object.keys(rows).sort();
+
+  const onProceedToTickets = () =>
+    navigation.navigate('TicketSelection', { screeningId, selectedSeats });
+
+  const onBackPress = () => navigation.goBack();
 
   return {
     isLoading,
@@ -38,6 +48,8 @@ export const useSeatSelectionViewModel = (screeningId: number) => {
     selectedSeats,
     toggleSeat,
     rows,
-    sortedRowKeys
+    sortedRowKeys,
+    onProceedToTickets,
+    onBackPress,
   };
 };

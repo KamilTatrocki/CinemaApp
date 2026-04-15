@@ -1,30 +1,16 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useBookingReviewViewModel } from '../../viewmodels/useBookingReviewViewModel';
 
 const BookingReviewScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const { screeningId, tickets } = route.params as { screeningId: number, tickets: any[] };
-  
-  const { isSubmitting, handleBooking } = useBookingReviewViewModel();
-
-  const onBookPress = () => {
-    handleBooking(
-      screeningId,
-      tickets,
-      (reservation) => navigation.navigate('Payment', { reservation }),
-      (errorMsg) => Alert.alert('Booking Error', errorMsg)
-    );
-  };
+  const { isSubmitting, tickets, onBookPress, onBackPress } = useBookingReviewViewModel();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#FFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Review Booking</Text>

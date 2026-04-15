@@ -1,15 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSeatSelectionViewModel } from '../../viewmodels/useSeatSelectionViewModel';
 
 const SeatSelectionScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const screeningId = (route.params as any)?.screeningId;
-
   const {
     isLoading,
     isError,
@@ -17,8 +12,10 @@ const SeatSelectionScreen = () => {
     selectedSeats,
     toggleSeat,
     rows,
-    sortedRowKeys
-  } = useSeatSelectionViewModel(screeningId);
+    sortedRowKeys,
+    onProceedToTickets,
+    onBackPress,
+  } = useSeatSelectionViewModel();
 
   if (isLoading) {
     return (
@@ -30,20 +27,16 @@ const SeatSelectionScreen = () => {
 
   if (isError || !seats) {
     return (
-        <View style={styles.center}>
-          <Text>Error loading seats.</Text>
-        </View>
+      <View style={styles.center}>
+        <Text>Error loading seats.</Text>
+      </View>
     );
   }
-
-  const proceedToTickets = () => {
-    navigation.navigate('TicketSelection', { screeningId, selectedSeats });
-  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Select Seats</Text>
@@ -100,7 +93,7 @@ const SeatSelectionScreen = () => {
         <TouchableOpacity 
           style={[styles.nextButton, selectedSeats.length === 0 && styles.disabledButton]} 
           disabled={selectedSeats.length === 0}
-          onPress={proceedToTickets}
+          onPress={onProceedToTickets}
         >
           <Text style={styles.nextButtonText}>NEXT</Text>
         </TouchableOpacity>

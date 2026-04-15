@@ -1,41 +1,11 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text } from 'react-native-paper';
-import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
-import { API_URL } from '../../api/config';
+import { usePaymentConfirmationViewModel } from '../../viewmodels/usePaymentConfirmationViewModel';
 
 const PaymentConfirmationScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation<any>();
-  const { reservation } = route.params as any;
-
-  useFocusEffect(
-    useCallback(() => {
-      let sound: Audio.Sound | undefined;
-
-      async function playSound() {
-        try {
-          const { sound: newSound } = await Audio.Sound.createAsync(
-            { uri: `${API_URL}/uploads/Karaluch.mp3` },
-            { shouldPlay: true, isLooping: true }
-          );
-          sound = newSound;
-        } catch (error) {
-          console.log('Error playing sound:', error);
-        }
-      }
-
-      playSound();
-
-      return () => {
-        if (sound) {
-          sound.unloadAsync();
-        }
-      };
-    }, [])
-  );
+  const { reservation, onViewTickets, onGoHome } = usePaymentConfirmationViewModel();
 
   return (
     <View style={styles.container}>
@@ -58,14 +28,14 @@ const PaymentConfirmationScreen = () => {
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.doneButton}
-          onPress={() => navigation.navigate('MainTabs', { screen: 'Account' })}
+          onPress={onViewTickets}
         >
           <Text style={styles.doneButtonText}>VIEW TICKETS</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.homeButton}
-          onPress={() => navigation.navigate('MainTabs')}
+          onPress={onGoHome}
         >
           <Text style={styles.homeButtonText}>GO TO HOME</Text>
         </TouchableOpacity>

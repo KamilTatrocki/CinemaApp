@@ -1,9 +1,14 @@
 import { useState } from 'react';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { fetchScreenings } from '../api/bookingApi';
 import { ScreeningResponse } from '../models/BookingModels';
 
-export const useScreeningsViewModel = (movieId: number) => {
+export const useScreeningsViewModel = () => {
+  const route = useRoute();
+  const navigation = useNavigation<any>();
+  const movieId = (route.params as any)?.movieId as number;
+
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const { data: screenings, isLoading, isError } = useQuery({
@@ -25,10 +30,15 @@ export const useScreeningsViewModel = (movieId: number) => {
     acc[date][cinema].push(screening);
     return acc;
   }, {} as Record<string, Record<string, ScreeningResponse[]>>);
-  
+
   const dates = Object.keys(screeningsByDate);
   const activeDate = selectedDate || dates[0];
   const activeScreeningsByCinema = screeningsByDate[activeDate] || {};
+
+  const onSelectScreening = (screeningId: number) =>
+    navigation.navigate('SeatSelection', { screeningId });
+
+  const onBackPress = () => navigation.goBack();
 
   return {
     isLoading,
@@ -37,6 +47,8 @@ export const useScreeningsViewModel = (movieId: number) => {
     dates,
     activeDate,
     activeScreeningsByCinema,
-    setSelectedDate
+    setSelectedDate,
+    onSelectScreening,
+    onBackPress,
   };
 };
